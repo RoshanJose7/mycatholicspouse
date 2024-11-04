@@ -1,0 +1,10 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+    <p>Dear {{app.first_name}},</p>
+    <br>
+    <p>Your application was generated successfully. To confirm your application submission, please complete your payment at <a href="https://marryacatholic.com{% url 'select-plan' app.id %}">https://marryacatholic.com{% url 'select-plan' app.id %}</a></p>
+    <p>Kindly ignore if already paid. </p>
+    <br>
+    <br>
+    <small>This is an auto-generated email, please do not reply to this.</small>
+{% endblock %}

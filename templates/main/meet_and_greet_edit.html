@@ -1,0 +1,43 @@
+{% extends 'main/admin_base.html' %}
+{% block title %}
+    Edit / Approve Request
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h4><b>GUIDELINES: </b></h4>
+    <ul>
+        <li>Meet Request can be edited and then approved in case of any unforeseen circumstances.</li>
+        <li>The admin shall contact both the parties before approving, and negotiate for a new meet date and/or slot (if there is any problem).</li>
+        <li>Both the parties will be notified (via <b>email</b>) after the request is approved.</li>
+    </ul>
+    <br>
+    <div class="card">
+        <div class="card-header"><h5>Approve Meet Slot & Date</h5></div>
+        <div class="card-body">
+            <p><b class="mr-2">Booked By:</b><a href="{% url 'admin-user-view' req.booked_by.matrimonyapplication.id %}" target="__blank">{{req.booked_by.first_name}} {{req.booked_by.last_name}}</a></p>
+            <p><b class="mr-2">Other Party:</b><a href="{% url 'admin-user-view' req.other_party.matrimonyapplication.id %}" target="__blank">{{req.other_party.first_name}} {{req.other_party.last_name}}</a></p>
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="id_meet_date" class="form-label">Preferred Meet Date</label>
+                        <input type="date" name="meet_date" id="id_meet_date" class="form-control" value='{{req.meet_date|date:"Y-m-d"}}'>
+                        <small class="text-muted">Please refrain from choosing Mondays.</small>
+                    </div>
+                    <div class="form-group col">
+                        <label for="id_meet_slot">Preferred Meet Slot</label>
+                        <select name="meet_slot" id="id_meet_slot" class="form-control">
+                            <option value="10-11" {% if req.meet_slot == '10-11' %} selected {% endif %}>10-11am</option>
+                            <option value="11-12" {% if req.meet_slot == '11-12' %} selected {% endif %}>11-12pm</option>
+                            <option value="14-15" {% if req.meet_slot == '14-15' %} selected {% endif %}>2-3pm</option>
+                            <option value="15-16" {% if req.meet_slot == '15-16' %} selected {% endif %}>3-4pm</option>
+                            <option value="16-17" {% if req.meet_slot == '16-17' %} selected {% endif %}>4-5pm</option>
+                        </select>
+                    </div>
+                </div>
+                <button class="btn btn-info">Approve</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,91 @@
+{% extends 'main/base.html' %}
+{% block title %}
+Meet And Greet
+{% endblock %}
+{% block content %}
+<div class="container">
+    <h1 style="font-size: 3rem;">MEET & GREET</h1>
+    <br>
+    <p style="font-size: 1.25rem;">Meet and Greet is the facility provided by our matrimonial website for matched couples
+        to come to Paalana Bhavan and meet the other family. We will host them in one of our parlours. <b>Prior booking is required for this facility.</b></p>
+    <p style="font-size: 1.125rem; font-weight: bold;">PROCESS FOR THE SAME:</p>
+    <ul>
+        <li>
+            Requesting for a Meet & Greet event:
+            <ul>
+                <li>You're requested to select a person from your matched list.</li>
+                <li>Select a meeting date and slot. Please refrain from choosing Mondays.</li>
+                <li>Submit your meeting request.</li>
+            </ul>
+        </li>
+        <li>
+            Approval of the admin:
+            <ul>
+                <li>Our team will reach out to you, once your meet request gets accepted.</li>
+                <li><b>Note that the time and date may change, according to the availability of both the parties, and Family Welfare Centre.</b></li>
+            </ul>
+        </li>
+    </ul>
+    <br>
+    <div class="card">
+        <div class="card-body m-4">
+            {% if not matched_list %}
+            <h3>You'll need to have at least one person you've matched with in order to use this service.</h3>
+            {% else %}
+            <form action="" method="POST">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="form-group col">
+                        <label for="id_other_party">Persons you've matched with</label>
+                        <select name="other_party" id="id_other_party" class="form-control">
+                            {% for person in matched_list %}
+                            <option value="{{person.email}}">{{person.first_name}} {{person.last_name}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group col">
+                        <label for="id_meet_date">Preferred Meet Date</label>
+                        <input type="date" name="meet_date" id="id_meet_date" class="form-control">
+                        <small class="text-muted">Note: Please refrain from choosing Mondays.</small>
+                    </div>
+                    <div class="form-group col">
+                        <label for="id_meet_slot">Preferred Meet Slot</label>
+                        <select name="meet_slot" id="id_meet_slot" class="form-control">
+                            <option value="10-11">10-11am</option>
+                            <option value="11-12">11-12pm</option>
+                            <option value="14-15">2-3pm</option>
+                            <option value="15-16">3-4pm</option>
+                            <option value="16-17">4-5pm</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" style="display: none;" id="submit_form"></button>
+            </form>
+            <button class="btn btn-outline-info" id="submit_ours">Submit Request</button>
+            {% endif %}
+        </div>
+    </div>
+</div>
+<script>
+    $("#submit_ours").click((e) => {
+        let other_party = document.getElementById("id_other_party").value;
+        let meet_date = document.getElementById("id_meet_date").value;
+        let meet_slot = document.getElementById("id_meet_slot").value;
+
+        if (meet_date) {
+            let [year, month, day] = meet_date.split("-")
+            let dayOfWeek = new Date(year, month - 1, day).toString().split(" ")[0];
+            console.log(dayOfWeek);
+
+            if (dayOfWeek === "Mon") {
+                alert("Please refrain from selecting Mondays");
+            }
+        }
+        else {
+            alert("Please select a date.");
+        }
+
+        $("#submit_form").click();
+    });
+</script>
+{% endblock %}

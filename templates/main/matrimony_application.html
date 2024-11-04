@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+  <head>
+    <title>Matrimony Application</title>
+    {{ form.media }}
+  </head>
+  <body>
+    <p>
+      <b>MATRIMONY APPLICATION</b>
+    </p>
+    <form id="matrimony-application-form" method="post" action=".">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button type="submit" value="continue">Continue</button>
+    </form>
+  </body>
+</html>

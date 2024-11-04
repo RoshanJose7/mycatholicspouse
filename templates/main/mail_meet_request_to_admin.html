@@ -1,0 +1,12 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+
+<h3 style="color: white; text-shadow: solid black 1px 1px 2px;">New Request</h3>
+<h4 style="color: white; text-shadow: solid black 1px 1px 2px;">New Meet & Greet Request from {{req.booked_by.email}} </h4>
+<p style="color: rgba(255, 255, 255, 0.726);">
+    View request details at <a href="{% url 'meet-and-greet-edit' req.id %}">https://marryacatholic.com{% url 'meet-and-greet-edit' req.id %}</a>
+    <br><br>
+    <hr>
+    <b><em style="color: rgba(255, 255, 255, 0.726);">This is an auto-generated email, please refrain from replying to the same.</em></b>
+</p>
+{% endblock %}

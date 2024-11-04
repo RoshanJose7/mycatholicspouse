@@ -1,0 +1,13 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+    <h4 class="lead text-center">Payment Complete</h4>
+    <p>Name   : {{app.first_name}}&nbsp;{{app.last_name}}</p>
+    <p>Age    : {{app.age}}</p>
+    <p>Gender : {{app.gender}}</p>
+    <p>Height : {{app.height}}</p>
+    <p>Weight : {{app.weight}}</p>
+    <p>Rite   : {{app.rite}}</p>
+    <p>Marital Status : {{app.marital_status}}</p>
+    <hr>
+    <p>View full details of this application at <a href="https://marryacatholic.com{% url 'admin-application-details' app.email %}">https://marryacatholic.com{% url 'admin-application-details' app.email %}</a></p>
+{% endblock %}

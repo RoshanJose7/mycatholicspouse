@@ -1,0 +1,5 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+    <h3 style="color: white; text-shadow: solid black 1px 1px 2px;">{{event.message}} {{event.user}}</h3>
+    <p>View their profile {% if event.type == "Matched" %}with contact info{% endif %} here : <a href="{{event.url}}">{{event.url}}</a></p>
+{% endblock %}

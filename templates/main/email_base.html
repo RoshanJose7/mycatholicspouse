@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email</title>
+</head>
+    <body>
+        <div style="width: 100%; display: inline-block; text-align: center; background-color: #121212; color: rgba(255, 255, 255, 0.726); padding: 10px;">
+            <img src="cid:marry_a_catholic_favicon.png" style="display: inline-block; width: 10rem;"/>
+            <div>
+                {% block email_body %}
+                {% endblock %}
+            </div>
+            <hr>
+            <div>
+                <p><h4>FAMILY WELFARE CENTRE - A SCHOOL OF DEEPER HUMANITY</h4></p>
+                <p class="card-text">
+                    Paalana Bhavana, Archdiocesan Pastoral Centre,
+                    <br>
+                    #5, Second Floor, Nandi Durg Road, 1st Cross, Benson Town Post, Bangalore 560046.
+                    <br>
+                    Phone: +91 82771 95603
+                </p>
+                <p class="card-text text-muted">
+                    Website: <a href="http://familywelfarecentre.com" style="color: white;">http://familywelfarecentre.com</a>
+                    <br>
+                    Email: <a href="mailto:fwcbangalore@gmail.com" style="color: white;">fwcbangalore@gmail.com</a>
+                </p>
+            </div>
+        </div>
+    </body>
+</html>

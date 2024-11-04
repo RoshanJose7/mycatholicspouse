@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    {% for i,v in data.items %}
+        {{i}} : {{v}}
+        <br>
+    {% endfor %}
+    <hr>
+    {% if app %}
+        <p>View full details of this application at <a href="https://marryacatholic.com{% url 'admin-application-details' app.email %}">https://marryacatholic.com{% url 'admin-application-details' app.email %}</a></p>
+    {% endif %}
+    
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Environment Files
+.env
+
+# Data Files
+db.sqlite3
+media/

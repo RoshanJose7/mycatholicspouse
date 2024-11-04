@@ -1,0 +1,42 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+
+<h3 style="color: white; text-shadow: solid black 1px 1px 2px;">Greetings!</h3>
+<h4 style="color: white; text-shadow: solid black 1px 1px 2px;">Welcome to <a href="https://marryacatholic.com" style="color: rgba(255, 255, 255, 0.726);">marryacatholic.com</a> - Bangalore Archdiocese's Matrimonial portal. Your application for registration has been approved. Your login credentials are as follows -</h4>
+<p style="color: rgba(255, 255, 255, 0.726);">
+    Username - <a href="mailto:{{username}}" style="color: rgba(255, 255, 255, 0.726);"><b>{{username}}</b></a>
+    <br>
+    <br>
+    Password - <b>{{password}}</b>
+    <br>
+</p>
+<p style="color: rgba(255, 255, 255, 0.726);">
+    Once you login, please visit your profile and check all information about you is correctly displayed. If you wish to edit some information, you can click the edit option and change it yourself. However, there are certain information that we do not allow users to edit, for changing those, please contact our office.
+    <br>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726); font-size: large;">How it works - </em></b>
+    <br>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726);">Change password</em></b><br>You can change your password, by clicking on change password from the dropdown menu.
+    <br>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726);">Matchmaking</em></b><br>marryacatholic.com website works the same way as most of the other matrimonial websites. You can browse through the profiles of others and express your interest in those profiles by clicking on the Interested button. We will intimate the other party regarding your interest and if they are also interested, you will get an intimation email regarding the same, and you will be able to see their 'contact details' in their profile. You can manage all these on your dashboard.
+    <br>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726);">Subscription Renewal</em></b><br>If your subscription is about to end and you want to renew, please click on the renew button from your profile page.
+    <br>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726);">Settle Marriage</em></b><br>If you are able to find a suitable life partner either inside or outside our portal, we encourage you to let us know about it by clicking the SETTLE button, so that we could take down your profile from showing up for others.
+    <br>
+    <br>
+    If you have any additional queries, please do not hesitate to reach out to our team.
+    <br>
+    <br>
+    Thanks & Regards,
+    <br>
+    FWC team.
+    <br>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726);"></em>This is an auto-generated email, please refrain from replying to the same.</em></b>
+</p>
+{% endblock %}

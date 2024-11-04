@@ -1,0 +1,464 @@
+{% extends 'main/admin_base.html' %}
+{% load custom_templates %}
+{% load static %}
+{% block title %}
+Rejected Users
+{% endblock %}
+{% block header %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<style>
+    #tbody>* {
+        margin-top: 1rem;
+    }
+
+    #tbody>*:first-child {
+        margin-top: 0rem;
+    }
+
+    #tbody tr {
+        border: none;
+    }
+
+    #tbody td {
+        border: none;
+    }
+
+    .our-card {
+        border: solid rgba(0, 0, 0, 0.301) 0.5px;
+        border-radius: 1rem;
+        padding: 0.5rem;
+        box-shadow: black 2px 2px 3px;
+    }
+
+    .media img {
+        margin: 0.5rem;
+        border-radius: 0.5rem;
+        box-shadow: black 1px 1px 2px;
+    }
+
+    .media h5 {
+        padding-top: 0.5rem;
+    }
+
+    #filter-wrap {
+        box-shadow: rgba(0, 0, 0, 0.712) 2px 2px 3px;
+        border-radius: 1rem;
+    }
+
+    #filter-h1 {
+        max-height: fit-content;
+        padding: 1rem;
+        background-color: #dc3545;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        /* box-shadow: rgba(0, 0, 0, 0.712) 2px 0px 3px; */
+    }
+
+    #filter {
+        border-left: solid rgba(0, 0, 0, 0.404) 1px;
+        border-right: solid rgba(0, 0, 0, 0.404) 1px;
+        border-bottom: solid rgba(0, 0, 0, 0.404) 1px;
+        max-height: fit-content;
+        padding: 1rem;
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        /* box-shadow: rgba(0, 0, 0, 0.712) 2px 0px 3px; */
+    }
+
+    #filter-h1 h1 {
+        color: white;
+        word-wrap: break-word;
+    }
+
+    #submit-filter {
+        box-shadow: rgba(0, 0, 0, 0.692) 2px 2px 2px;
+        background: linear-gradient(45deg, yellow, rgb(255, 136, 0));
+        color: black;
+        transition: 0.4s ease-in-out;
+    }
+
+    #filter-clear {
+        box-shadow: rgba(0, 0, 0, 0.692) 2px 2px 2px;
+        border-radius: 8px;
+        transition: 0.4s ease;
+    }
+
+    #filter-clear:hover {
+        box-shadow: rgba(0, 0, 0, 0.692) 3px 3px 4px;
+        border-radius: 100%;
+        transition: 0.4s ease;
+    }
+
+    #submit-filter:hover {
+        background: linear-gradient(60deg, yellow, rgb(255, 94, 0));
+        box-shadow: rgba(0, 0, 0, 0.692) 3px 3px 4px;
+        background-position-x: 25%;
+        transition: 0.4s ease-in-out;
+    }
+
+    .user-links {
+        background: linear-gradient(to right, #ED213A, #af2c1d);
+        color: white;
+        border: none;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: black 2px 2px 3px;
+        transform: translate(0px, 0px);
+        transition: 0.2s ease;
+    }
+
+    .user-links:hover {
+        box-shadow: black 3px 3px 4px;
+        transform: translate(1px, 1px);
+        /* border-bottom-right-radius: 5% 30%;
+        border-top-right-radius: 5% 30%; */
+        transition: 0.2s ease;
+    }
+
+    #prothom-charte {
+        height: 200px;
+    }
+
+    @media screen and (max-width: 980px) {
+        .col-md-4 {
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+    }
+</style>
+<style>
+    .wrapper {
+        background: #FDFEFF;
+        -webkit-transition: background .6s ease;
+        transition: background .6s ease;
+        border-radius: 10px;
+        padding: 20px 20px 20px 20px;
+        box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .wrapper .top-icons i {
+        color: #080911;
+    }
+
+    .wrapper .top-icons i:nth-of-type(1) {
+        float: left;
+    }
+
+    .wrapper .top-icons i:nth-of-type(2) {
+        float: right;
+    }
+
+    .wrapper .top-icons i:nth-of-type(3) {
+        float: right;
+        padding-right: .8em;
+    }
+
+    .wrapper .profile {
+        margin-top: 2.2em;
+        position: relative;
+    }
+
+    .wrapper .profile:after {
+        width: 100%;
+        height: 1px;
+        content: ' ';
+        display: block;
+        margin-top: 1.3em;
+        background: #E9EFF6;
+    }
+
+    .wrapper .profile .check {
+        position: absolute;
+        right: 5em;
+        bottom: 12.7em;
+    }
+
+    .wrapper .profile .check i {
+        color: #fff;
+        width: 20px;
+        height: 20px;
+        font-size: 12px;
+        line-height: 20px;
+        text-align: center;
+        border-radius: 100%;
+        background: -webkit-gradient(linear, left top, right bottom, from(#C90A6D), to(#FF48A0));
+        background: linear-gradient(to bottom right, #C90A6D, #FF48A0);
+    }
+
+    .wrapper .profile .thumbnail {
+        width: 124px;
+        height: 124px;
+        display: -webkit-box;
+        display: flex;
+        margin-left: auto;
+        margin-right: auto;
+        margin-bottom: 1.5em;
+        border-radius: 100%;
+        box-shadow: 0 13px 26px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .wrapper .profile .name {
+        color: #2D354A;
+        font-size: 24px;
+        font-weight: 600;
+        text-align: center;
+    }
+
+    .wrapper .profile .title {
+        color: #7C8097;
+        font-size: .75em;
+        font-weight: 300;
+        text-align: center;
+        padding-top: .5em;
+        padding-bottom: .7em;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+    }
+
+    .wrapper .profile .description {
+        color: #080911;
+        font-size: 14px;
+        font-weight: 300;
+        text-align: center;
+        margin-bottom: 1.3em;
+    }
+
+    .wrapper .profile .btn {
+        color: #fff;
+        width: 130px;
+        height: 42px;
+        outline: none;
+        border: none;
+        display: block;
+        cursor: pointer;
+        font-weight: 300;
+        margin-left: auto;
+        margin-right: auto;
+        border-radius: 70px;
+        box-shadow: 0 13px 26px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.16);
+        background: -webkit-gradient(linear, left top, right bottom, from(#C90A6D), to(#FF48A0));
+        background: linear-gradient(to bottom right, #C90A6D, #FF48A0);
+    }
+
+    .wrapper .social-icons {
+        display: -webkit-box;
+        display: flex;
+        margin-top: 1.2em;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+    }
+
+    .wrapper .social-icons .icon {
+        display: -webkit-box;
+        display: flex;
+        -webkit-box-align: center;
+        align-items: center;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        flex-direction: column;
+    }
+
+    .wrapper .social-icons .icon a {
+        color: #fff;
+        width: 60px;
+        height: 60px;
+        font-size: 28px;
+        line-height: 60px;
+        text-align: center;
+        border-radius: 30px;
+        box-shadow: 0 13px 26px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
+    }
+
+    .wrapper .social-icons .icon:nth-of-type(1) a {
+        background: -webkit-gradient(linear, left top, right bottom, from(#C90A6D), to(#FF48A0));
+        background: linear-gradient(to bottom right, #C90A6D, #FF48A0);
+    }
+
+    .wrapper .social-icons .icon:nth-of-type(2) a {
+        background: -webkit-gradient(linear, left top, right bottom, from(#5E5AEC), to(#3F9EFC));
+        background: linear-gradient(to bottom right, #5E5AEC, #3F9EFC);
+    }
+
+    .wrapper .social-icons .icon:nth-of-type(3) a {
+        background: -webkit-gradient(linear, left top, right bottom, from(#6452E9), to(#639FF9));
+        background: linear-gradient(to bottom right, #6452E9, #639FF9);
+    }
+
+    .wrapper .social-icons .icon h4 {
+        color: #080911;
+        font-size: 1em;
+        margin-top: 1.3em;
+        margin-bottom: .2em;
+    }
+
+    .wrapper .social-icons .icon p {
+        color: #666B7D;
+        font-size: 12px;
+    }
+
+    .concept {
+        position: absolute;
+        bottom: 25px;
+        color: #AAB0C4;
+        font-size: .9em;
+        font-weight: 400;
+    }
+
+    .concept a {
+        color: #ac1966;
+        text-decoration: none;
+    }
+
+    .mac-marital-icons {
+        display: inline-block;
+        width: 2rem;
+        margin-left: 0.25rem;
+        margin-right: 0.25rem;
+    }
+
+    .mac-marital-icons img {
+        width: 100%;
+        height: auto;
+    }
+
+    table.dataTable {
+        border-collapse: collapse;
+    }
+    .profile-pic {
+        width: 200px;
+        height: 200px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.644) 1px 1px 2px;
+        border: solid rgba(128, 128, 128, 0.623) 1px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<ul class="nav nav-tabs" style="margin-bottom: 1rem;">
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin-home' %}">Pending Applications</a>
+    </li>    
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'active-users' %}">Active</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'inactive-users' %}">Inactive</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'unpaid-users' %}">Unpaid</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'approved-users'%}">Approved</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link active" style="box-shadow: black 2px -2px 3px;" href="{% url 'rejected-users'%}">Rejected</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'blocked-users' %}">Blocked</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="{% url 'meet-and-greet-admin' %}">Meet & Greet</a>
+    </li>
+</ul>
+<div class="row">
+    <div class="col-md-12">
+        <table id="user-table" class="table table-responsive-lg" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Applications</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                {% for app in normal_user %}
+                <tr style="margin: 1rem; border-bottom: solid 1px black">
+                    <td style="padding: 0.5rem;">
+                        <div class="our-card">
+                            <div class="col media">
+                                <div class="mr-3 profile-pic" style="background: url('{% profile app %}');
+                                background-size: cover;
+                                background-position: center;
+                                background-repeat: no-repeat;"></div>
+                                <div style="display:inline-block;position:relative;top:80px;">
+                                    <h5 class="mt-0"><a href="{% url 'admin-application-details' app.email %}"> {{app.first_name}}
+                                            {{app.last_name}}</a></h5>
+                                    <p>
+                                        {{app.mother_tongue}}
+                                        <br>
+                                        {{app.date_of_birth|timesince|split:", "}}
+                                        <br>
+                                        {% if app.occupation != None %}
+                                        {{app.occupation}}
+                                        <br>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div style="text-align: justify; padding: 0.5rem;">
+                                {% if app.about_yourself|length %}
+                                {{app.about_yourself}}
+                                {% endif %}
+                            </div>
+                            {% if app.marital_status != 'Single' %}
+                            <div style="text-align: right; padding: 0.5rem;">
+                                {% if app.marital_status == 'Widowed' %}
+                                <div class='mac-marital-icons' title="Widowed">
+                                    <img src="{% static 'main/img/widowed.png' %}" alt="Widow">
+                                </div>
+                                {% endif %}
+                                {% if app.marital_status == 'Divorced' %}
+                                <div class='mac-marital-icons' title="Divorced">
+                                    <img src="{% static 'main/img/divorced.png' %}" alt="Divorced">
+                                </div>
+                                {% endif %}
+                                
+                            </div>
+                            {% endif %}
+                            {% if app.disability == 'Yes' %}
+                                <div class='mac-marital-icons' title="Disabled">
+                                    <img src="{% static 'main/img/disabled.png' %}" alt="Disabled">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    window.onload = () => {
+        if (window.location.hash == "#loaded") {
+            window.location.hash = "";
+            window.location.reload();
+        }
+        else {
+            window.location.hash = "#loaded";
+        }
+    }
+</script>
+<script>
+    $(document).ready(() => {
+        $('#user-table').DataTable();
+        filters = [...document.getElementsByClassName('form-control form-control-sm')];
+        filters.forEach((element, index) => {
+            element.className = "custom-input";
+            element.style.minWidth = (index == 1) ? "30rem" : "";
+            element.style.borderBottom = (index == 1) ? "solid 0.5px grey" : "";
+        });
+        setInterval(() => {
+            page_links = [...document.getElementsByClassName('page-link')];
+            page_links.forEach((element, index) => {
+                if (element.parentNode.className != 'paginate_button page-item active') {
+                    element.style.background = "transparent";
+                    element.style.border = "solid 0.5px black;"
+                    element.style.color = "gainsboro";
+                }
+            });
+        }, 0);
+    });
+</script>
+{% endblock %}

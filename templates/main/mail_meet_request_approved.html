@@ -1,0 +1,17 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+
+<h3 style="color: white; text-shadow: solid black 1px 1px 2px;">Your Meet Request was approved</h3>
+<p style="color: rgba(255, 255, 255, 0.726);">
+    <b>Thank you for using our service. Please find the meet details below.</b>
+    <div style="margin: 1.5rem;">
+        <h3><b>Meet & Greet Request: </b></h3>
+        <h4>Booked by: {{req.booked_by.first_name}} {{req.booked_by.last_name}}</h4>
+        <h4>Other Party: {{req.other_party.first_name}} {{req.other_party.last_name}}</h4>
+        <h4>Meet Date: {{req.meet_date}}</h4>
+        <h4>Meet Slot: {{req.get_meet_slot_display}}</h4>
+    </div>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726);">This is an auto-generated email, please refrain from replying to the same.</em></b>
+</p>
+{% endblock %}

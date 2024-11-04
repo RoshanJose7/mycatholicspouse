@@ -1,0 +1,62 @@
+{% extends 'main/base.html' %}
+{% block title %}
+    Login with ID
+{% endblock %}
+{% block header %}
+<style>
+    body {
+        background-color: #152a38;
+        text-align: center;
+    }
+
+    .login-card {
+        margin-top: 2rem;
+        display: inline-block;
+        background-color: #89CFF0;
+        padding: 2rem;
+        width: 40%;
+        text-align: left;
+        min-width: 320px;
+        max-width: 475px;
+        border-radius: 1rem;
+        box-shadow: black 3px 3px 6px 4px;
+    }
+
+    .error {
+        color: red;
+    }
+</style>
+{% endblock %}
+{% block content %}
+        <div class="login-card">
+            <center><h2 class="lead">Login</h2></center>
+            <div class="error"></div>
+                <div class="form-group">
+                    <label for="id_regID">Registration ID</label>
+                    <input type="text" class="form-control" name = "regID" id="id_regID" placeholder="Registration ID">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" class="form-control" name = "password" id="id_password" placeholder="Password">
+                </div>
+            <button class="btn btn-success" id="id_submit">Login</button>
+        </div>
+        <script>
+            $("#id_submit").click(() => {
+                reg_id = document.getElementsByName("regID")[0];
+                password = document.getElementsByName("password")[0];
+                $.get("/api/check-cred/" + reg_id.value + "/" + password.value + "/", (data) => {
+                    if(data.code == 200) {
+                        window.location.href = "/update-details/" + String(data.id) + "/";
+                    } else {
+                        error_div = document.getElementsByClassName("error")[0];
+                        error_div.innerHTML = "Invalid Registration ID or Password";
+                    }
+                })
+            });
+            $("input").on('focus', () => {
+                error_div = document.getElementsByClassName("error")[0];
+                error_div.innerHTML = "";
+            });
+        </script>
+{% endblock %}

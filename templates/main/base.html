@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <!-- CSS -->
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+            integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+            crossorigin="anonymous"
+        />
+        <!-- <link rel="stylesheet" href="{% static 'main/css/base.css' %}"> -->
+        <link
+            rel="icon"
+            type="image/x-icon"
+            href="/media/favicon-marry_fwgi7c.png"
+        />
+        <!-- jQuery and JS bundle w/ Popper.js -->
+        <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://kit.fontawesome.com/89e8b510b0.js"
+            crossorigin="anonymous"
+        ></script>
+
+        <!-- Hotjar Tracking Code for marryacatholic.com -->
+        <script>
+            (function (h, o, t, j, a, r) {
+                h.hj =
+                    h.hj ||
+                    function () {
+                        (h.hj.q = h.hj.q || []).push(arguments);
+                    };
+                h._hjSettings = { hjid: 2541006, hjsv: 6 };
+                a = o.getElementsByTagName("head")[0];
+                r = o.createElement("script");
+                r.async = 1;
+                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(
+                window,
+                document,
+                "https://static.hotjar.com/c/hotjar-",
+                ".js?sv="
+            );
+        </script>
+
+        <!--
+        META Start
+
+        marry_a_catholic_favicon_uxgngo_eqm5hi.png
+        favicon-marry_fwgi7c.png
+    -->
+        <meta
+            name="description"
+            content="marryacatholic.com - Bangalore Archdiocese's Matrimonial portal"
+        />
+        <meta
+            name="keywords"
+            content="matrimony, catholic, bangalore, bengaluru, christian"
+        />
+        <meta property="og:title" content="marryacatholic.com" />
+        <meta
+            property="og:description"
+            content="marryacatholic.com - Bangalore Archdiocese's Matrimonial portal"
+        />
+        <meta
+            property="og:image"
+            content="/media/marry_heart_1920x700_wwqt3d.jpg"
+        />
+
+        <meta name="twitter:title" content="marryacatholic.com" />
+        <meta
+            name="twitter:description"
+            content="marryacatholic.com - Bangalore Archdiocese's Matrimonial portal"
+        />
+        <meta
+            property="twitter:image"
+            content="/media/marry_heart_1920x700_wwqt3d.jpg"
+        />
+
+        <!--
+        META End
+    -->
+
+        <title>
+            {% block title %} {% endblock %}&nbsp;| Marryacatholic.com
+        </title>
+        {% include 'main/base.css.html' %}
+        <style>
+            html {
+                position: relative;
+                min-height: 100%;
+            }
+
+            body {
+                /* 115px is the height of my footer */
+                padding-bottom: 500px;
+            }
+
+            #navbar-main {
+                background-color: #263238;
+                box-shadow: black 0px 2px 3px;
+                transition: 0.4s ease-in;
+                z-index: 99;
+            }
+
+            .navbar-main-rounded {
+                border-bottom-left-radius: 50% 30%;
+                border-bottom-right-radius: 50% 30%;
+                padding-bottom: 1rem;
+                transition: 0.4s ease-out;
+            }
+
+            footer {
+                position: absolute;
+                bottom: 0;
+                width: 100%;
+                padding-top: 20px;
+                padding-bottom: 0px;
+            }
+
+            .special-color-dark {
+                background-color: #263238;
+            }
+
+            .footer-copyright {
+                background-color: #1e282d;
+            }
+
+            .btn-floating {
+                color: white;
+            }
+
+            footer a {
+                color: white;
+            }
+
+            footer a:hover {
+                color: #4f4f4f;
+            }
+
+            .list-unstyled {
+                display: flex;
+                flex-direction: column;
+            }
+
+            .text-uppercase {
+                text-align: center;
+            }
+
+            #mac-logo {
+                width: 8rem;
+            }
+
+            @media screen and (min-width: 980px) {
+                .navbar-main-rounded {
+                    border-bottom-left-radius: 0;
+                    border-bottom-right-radius: 0;
+                    padding-bottom: 0rem;
+                    transition: 0.1s ease-in;
+                }
+
+                .navbar-main-rounded:hover {
+                    border-bottom-left-radius: 50% 20%;
+                    border-bottom-right-radius: 50% 20%;
+                    padding-bottom: 1rem;
+                    transition: 0.1s ease-out;
+                }
+            }
+        </style>
+        <link rel="stylesheet" href="{% static 'main/css/rSlider.min.css' %}" />
+        <script src="{% static 'main/js/rSlider.min.js' %}"></script>
+        {% block header %} {% endblock %}
+    </head>
+
+    <body>
+        <!-- Modal -->
+        <div
+            class="modal fade"
+            id="exampleModal"
+            aria-labelledby="exampleModalLabel"
+            aria-hidden="true"
+        >
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div
+                        class="modal-header"
+                        style="
+                            color: #fff;
+                            background: linear-gradient(
+                                to right,
+                                #eb3349,
+                                #f45c43
+                            );
+                        "
+                    >
+                        <h5 class="modal-title" id="exampleModalLabel">
+                            Pricing
+                        </h5>
+                        <button
+                            type="button"
+                            class="btn btn-flat"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <i
+                                class="fa fa-times"
+                                aria-hidden="true"
+                                style="color: #fff"
+                            ></i>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div
+                            class="flex-row"
+                            style="display: flex; flex-wrap: wrap"
+                        >
+                            <div class="col p-4">
+                                <div class="card">
+                                    <div class="card-body" style="color: black">
+                                        <h5 class="card-title">
+                                            1 year subscription
+                                        </h5>
+                                        <p
+                                            class="card-text"
+                                            style="font-size: 0.85rem"
+                                        >
+                                            Price : ₹ 1000 + 18% GST
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col p-4">
+                                <div class="card">
+                                    <div class="card-body" style="color: black">
+                                        <h5 class="card-title">
+                                            6 months subscription
+                                        </h5>
+                                        <p
+                                            class="card-text"
+                                            style="font-size: 0.85rem"
+                                        >
+                                            Price : ₹ 500 + 18% GST
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col p-4">
+                                <div class="card">
+                                    <div class="card-body" style="color: black">
+                                        <h5 class="card-title">
+                                            3 months subscription
+                                        </h5>
+                                        <p
+                                            class="card-text"
+                                            style="font-size: 0.85rem"
+                                        >
+                                            Price : ₹ 300 + 18% GST
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button
+                            type="button"
+                            class="btn btn-danger"
+                            data-dismiss="modal"
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <nav
+            class="navbar navbar-expand-lg navbar-dark navbar-main-rounded"
+            id="navbar-main"
+        >
+            <a class="navbar-brand" href="/"
+                ><img
+                    src="/media/marry_a_catholic_favicon_uxgngo.png"
+                    id="mac-logo"
+                    alt="MarryACatholic.com"
+            /></a>
+            <button
+                class="navbar-toggler"
+                id="nav-toggler"
+                type="button"
+                data-toggle="collapse"
+                data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+            >
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            data-toggle="modal"
+                            data-target="#exampleModal"
+                            style="cursor: pointer"
+                        >
+                            Pricing
+                        </a>
+                    </li>
+                    {% if request.user.is_authenticated %}
+                    <li class="nav-item">
+                        <a
+                            href="{% url 'meet-and-greet' %}"
+                            class="nav-link"
+                            aria-disabled="true"
+                            >Meet & Greet</a
+                        >
+                    </li>
+                    <li class="nav-item">
+                        {% if request.user.is_staff %}
+                        <a
+                            class="nav-link"
+                            href="{% url 'admin-home' %}"
+                            aria-disabled="true"
+                            >Dashboard</a
+                        >
+                        {% else %}
+                        <a
+                            class="nav-link"
+                            href="{% url 'user-dashboard' %}"
+                            aria-disabled="true"
+                            >Dashboard</a
+                        >
+                        {% endif %}
+                    </li>
+                    {% endif %}
+                    <li class="nav-item">
+                        {% if request.user.is_authenticated %}
+                        <div class="dropdown">
+                            <button
+                                type="button"
+                                class="btn btn-danger dropdown-toggle"
+                                data-toggle="dropdown"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                            >
+                                {{request.user.first_name}}
+                                {{request.user.last_name}}
+                            </button>
+                            <div class="dropdown-menu">
+                                {% if not request.user.is_staff %}
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'profile' request.user.email %}"
+                                    >My Profile</a
+                                >
+                                {% endif %}
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'password-reset' %}"
+                                    >Change Password</a
+                                >
+                                <div class="dropdown-divider"></div>
+                                <a
+                                    class="dropdown-item"
+                                    href="{% url 'logout' %}"
+                                    >Logout</a
+                                >
+                            </div>
+                        </div>
+                        {% else %}
+                        <a class="nav-link" href="{% url 'login' %}">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a
+                            class="nav-link"
+                            href="{% url 'form-fill-instructions' %}"
+                            >Register</a
+                        >
+                        {% endif %}
+                    </li>
+                </ul>
+            </div>
+        </nav>
+        <div class="container-fluid" id="content" style="z-index: 1">
+            {% block content %} {% endblock %}
+        </div>
+        <div style="height: {% block footer_adjust %}{% endblock %};"></div>
+        <footer
+            class="
+                page-footer
+                text-white text-center
+                special-color-dark
+                text-lg-left
+            "
+        >
+            <div class="container p-4">
+                <div class="row">
+                    <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                        <h6 class="text-uppercase">
+                            Family Welfare Centre - A School of Deeper Humanity
+                        </h6>
+
+                        <p style="text-align: center; font-size: small">
+                            Paalana Bhavana, Archdiocesan Pastoral Centre,<br />
+                            #5, Second Floor, Nandi Durg Road, 1st Cross, Benson
+                            Town Post, Bangalore 560046.<br />
+                            Phone: +91 82771 95603
+                        </p>
+                    </div>
+                    <div class="col-lg-6 col-md-12 mb-4 mb-md-0">
+                        <h5 class="text-uppercase">Quick Navigation</h5>
+
+                        <ul class="list-unstyled">
+                            <li>
+                                <a href="/" class="text-white">Home</a>
+                            </li>
+                            <li>
+                                <a href="/matrimony-form" class="text-white"
+                                    >Registration</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="{% url 'terms-and-conditions' %}"
+                                    class="text-white"
+                                    >Terms And Conditions</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="{% url 'privacy-policy' %}"
+                                    class="text-white"
+                                    >Privacy Policy</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="{% url 'refund-policy' %}"
+                                    class="text-white"
+                                    >Cancellation/Refund Policy</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="{% url 'contact-us' %}"
+                                    class="text-white"
+                                    >Contact Us</a
+                                >
+                            </li>
+                            <li>
+                                <a
+                                    href="{% url 'about-us' %}"
+                                    class="text-white"
+                                    >About Us</a
+                                >
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div
+                class="footer-copyright text-center p-3"
+                style="background-color: rgba(0, 0, 0, 0.2)"
+            >
+                © 2021 Copyright:
+                <a class="text-white" href="https://marryacatholic.com/"
+                    >MarryACatholic.com</a
+                >
+            </div>
+        </footer>
+        <script>
+            $("#nav-toggler").click(() => {
+                console.log($("#nav-toggler").attr("aria-expanded"));
+                if ($("#nav-toggler").attr("aria-expanded") == "false") {
+                    $("#navbar-main").removeClass("navbar-main-rounded");
+                } else {
+                    $("#navbar-main").addClass("navbar-main-rounded");
+                }
+                setInterval(() => {}, 300);
+            });
+        </script>
+        <!-- <script>
+        (function() {
+            var mousePos;
+            
+            document.onmousemove = handleMouseMove;
+            setInterval(getMousePosition, 50); // setInterval repeats every X ms
+            
+            function handleMouseMove(event) {
+                var dot, eventDoc, doc, body, pageX, pageY;
+                
+                event = event || window.event; // IE-ism
+                
+                // If pageX/Y aren't available and clientX/Y are,
+                // calculate pageX/Y - logic taken from jQuery.
+                // (This is to support old IE)
+                if (event.pageX == null && event.clientX != null) {
+                    eventDoc = (event.target && event.target.ownerDocument) || document;
+                    doc = eventDoc.documentElement;
+                    body = eventDoc.body;
+                    
+                    event.pageX = event.clientX +
+                    (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
+                    (doc && doc.clientLeft || body && body.clientLeft || 0);
+                    event.pageY = event.clientY +
+                    (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
+                    (doc && doc.clientTop  || body && body.clientTop  || 0 );
+                }
+                
+                mousePos = {
+                    x: event.pageX,
+                    y: event.pageY
+                };
+            }
+            function getMousePosition() {
+                var pos = mousePos;
+                maxWidth = window.outerWidth;
+                if (window.outerWidth > 980){
+                    if (!pos) {
+                        document.getElementById("navbar-main").style.borderBottomLeftRadius = "50% 30%";
+                        document.getElementById("navbar-main").style.borderBottomRightRadius = "50% 30%";
+                    }
+                    else {
+                        if (pos.x > (maxWidth/2) + 40) {
+                            x = pos.x - (maxWidth/2);
+                            x = 50-(x/(maxWidth/2)*50);
+                            console.log(x);
+                            document.getElementById("navbar-main").style.borderBottomRightRadius = String(x) + "% 30%";
+                            document.getElementById("navbar-main").style.borderBottomLeftRadius = "0% 30%";
+                        }
+                        else if (pos.x < (maxWidth/2) - 40) {
+                            x = pos.x;
+                            x = (x/(maxWidth/2)*50);
+                            if (x<1){
+                                x=1;
+                            }
+                            console.log(x);
+                            document.getElementById("navbar-main").style.borderBottomLeftRadius = String(x) + "% 30%";
+                            document.getElementById("navbar-main").style.borderBottomRightRadius = "0% 30%";
+                        }
+                        else{
+                            document.getElementById("navbar-main").style.borderBottomLeftRadius = "50% 30%";
+                            document.getElementById("navbar-main").style.borderBottomRightRadius = "50% 30%";
+                        }
+                    }
+                }
+            }
+        })();
+    </script> -->
+    </body>
+</html>

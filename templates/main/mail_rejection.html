@@ -1,0 +1,6 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+    <h3 style="color: white; text-shadow: solid black 1px 1px 2px;">Your application has been rejected by one of our admins</h3>
+    <p style="color: rgba(255, 255, 255, 0.726);">{{message}}</p>
+    <small>For any queries, leave a mail at <a href="mailto:fwcbangalore@gmail.com">fwcbangalore@gmail.com</a></small>
+{% endblock %}

@@ -1,0 +1,6 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+    <h3 style="color: white; text-shadow: solid black 1px 1px 2px;">You've successfully updated your details.</h3>
+    <p style="color: rgba(255, 255, 255, 0.726);">You can now access your account and view potential partners on the site.</p>
+    Please use username: <a href="mailto:{{username}}" style="color: rgba(255, 255, 255, 0.726);">{{username}}</a> and password: <b>{{password}}</b> to login to <a href="https://marryacatholic.com" style="color: rgba(255, 255, 255, 0.726);">marryacatholic.com</a>
+{% endblock %}

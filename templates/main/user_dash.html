@@ -1,0 +1,676 @@
+{% extends 'main/base.html' %}
+{% load custom_templates %}
+{% load static %}
+{% block title %}
+    My Dashboard
+{% endblock %}
+{% block header %}
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css"> 
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+<style>
+    #tbody > * {
+        margin-top: 1rem;
+    }
+    #tbody > *:first-child {
+        margin-top: 0rem;
+    }
+    #tbody tr {
+        border: none;
+    }
+    #tbody td {
+        border: none;
+    }
+    .our-card {
+        border: solid rgba(0, 0, 0, 0.301) 0.5px;
+        border-radius: 1rem;
+        padding: 0.5rem;
+        box-shadow: black 2px 2px 3px;
+    }
+    .media img{
+        margin: 0.5rem;
+        border-radius: 0.5rem;
+        box-shadow: black 1px 1px 2px;
+    }
+    .media h5{
+        padding-top: 0.5rem;
+    }
+    #filter-wrap{
+        box-shadow: rgba(0, 0, 0, 0.712) 2px 2px 3px;
+        border-radius: 1rem;
+    }
+    #filter-h1{
+        max-height: fit-content;
+        padding: 1rem;
+        background-color:#dc3545;
+        border-top-left-radius: 1rem;
+        border-top-right-radius: 1rem;
+        /* box-shadow: rgba(0, 0, 0, 0.712) 2px 0px 3px; */
+    }
+    #filter{
+        border-left: solid rgba(0, 0, 0, 0.404) 1px;
+        border-right: solid rgba(0, 0, 0, 0.404) 1px;
+        border-bottom: solid rgba(0, 0, 0, 0.404) 1px;
+        max-height: fit-content;
+        padding: 1rem;
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        /* box-shadow: rgba(0, 0, 0, 0.712) 2px 0px 3px; */
+    }
+    #filter-h1 h1{
+        color: white;
+        word-wrap: break-word;
+    }
+    #submit-filter{
+        box-shadow: rgba(0, 0, 0, 0.692) 2px 2px 2px;
+        background: linear-gradient(45deg, yellow, rgb(255, 136, 0));
+        color: black;
+        transition: 0.4s ease-in-out;
+    }
+    #filter-clear{
+        box-shadow: rgba(0, 0, 0, 0.692) 2px 2px 2px;
+        border-radius: 8px;
+        transition: 0.4s ease;
+    }
+    #filter-clear:hover{
+        box-shadow: rgba(0, 0, 0, 0.692) 3px 3px 4px;
+        border-radius: 100%;
+        transition: 0.4s ease;
+    }
+    #submit-filter:hover {
+        background: linear-gradient(60deg, yellow, rgb(255, 94, 0));
+        box-shadow: rgba(0, 0, 0, 0.692) 3px 3px 4px;
+        background-position-x: 25%;
+        transition: 0.4s ease-in-out;
+    }
+
+    .user-links {
+        background: linear-gradient(to right, #ED213A, #af2c1d);
+        color: white;
+        border: none;
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+        box-shadow: black 2px 2px 3px;
+        transform: translate(0px, 0px);
+        transition: 0.2s ease;
+    }
+
+    .user-links:hover {
+        box-shadow: black 3px 3px 4px;
+        transform: translate(1px, 1px);
+        /* border-bottom-right-radius: 5% 30%;
+        border-top-right-radius: 5% 30%; */
+        transition: 0.2s ease;
+    }
+
+    #prothom-charte{
+        height: 200px;
+    }
+
+    @media screen and (max-width: 980px) {
+        .col-md-4{
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+    }
+</style>
+<style>
+    .wrapper {
+  background: #FDFEFF;
+  -webkit-transition: background .6s ease;
+  transition: background .6s ease;
+  border-radius: 10px;
+  padding: 20px 20px 20px 20px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+}
+.wrapper .top-icons i {
+  color: #080911;
+}
+.wrapper .top-icons i:nth-of-type(1) {
+  float: left;
+}
+.wrapper .top-icons i:nth-of-type(2) {
+  float: right;
+}
+.wrapper .top-icons i:nth-of-type(3) {
+  float: right;
+  padding-right: .8em;
+}
+.wrapper .profile {
+  margin-top: 2.2em;
+  position: relative;
+}
+.wrapper .profile:after {
+  width: 100%;
+  height: 1px;
+  content: ' ';
+  display: block;
+  margin-top: 1.3em;
+  background: #E9EFF6;
+}
+.wrapper .profile .check {
+  position: absolute;
+  right: 5em;
+  bottom: 12.7em;
+}
+.wrapper .profile .check i {
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  font-size: 12px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 100%;
+  background: -webkit-gradient(linear, left top, right bottom, from(#C90A6D), to(#FF48A0));
+  background: linear-gradient(to bottom right, #C90A6D, #FF48A0);
+}
+.wrapper .profile .thumbnail {
+  width: 124px;
+  height: 124px;
+  display: -webkit-box;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  margin-bottom: 1.5em;
+  border-radius: 100%;
+  box-shadow: 0 13px 26px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+.wrapper .profile .name {
+  color: #2D354A;
+  font-size: 24px;
+  font-weight: 600;
+  text-align: center;
+}
+.wrapper .profile .title {
+  color: #7C8097;
+  font-size: .75em;
+  font-weight: 300;
+  text-align: center;
+  padding-top: .5em;
+  padding-bottom: .7em;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+.wrapper .profile .description {
+  color: #080911;
+  font-size: 14px;
+  font-weight: 300;
+  text-align: center;
+  margin-bottom: 1.3em;
+}
+.wrapper .profile .btn {
+  color: #fff;
+  width: 130px;
+  height: 42px;
+  outline: none;
+  border: none;
+  display: block;
+  cursor: pointer;
+  font-weight: 300;
+  margin-left: auto;
+  margin-right: auto;
+  border-radius: 70px;
+  box-shadow: 0 13px 26px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.16);
+  background: -webkit-gradient(linear, left top, right bottom, from(#C90A6D), to(#FF48A0));
+  background: linear-gradient(to bottom right, #C90A6D, #FF48A0);
+}
+.wrapper .social-icons {
+  display: -webkit-box;
+  display: flex;
+  margin-top: 1.2em;
+  -webkit-box-pack: justify;
+          justify-content: space-between;
+}
+.wrapper .social-icons .icon {
+  display: -webkit-box;
+  display: flex;
+  -webkit-box-align: center;
+          align-items: center;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+          flex-direction: column;
+}
+.wrapper .social-icons .icon a {
+  color: #fff;
+  width: 60px;
+  height: 60px;
+  font-size: 28px;
+  line-height: 60px;
+  text-align: center;
+  border-radius: 30px;
+  box-shadow: 0 13px 26px rgba(0, 0, 0, 0.2), 0 3px 6px rgba(0, 0, 0, 0.2);
+}
+.wrapper .social-icons .icon:nth-of-type(1) a {
+  background: -webkit-gradient(linear, left top, right bottom, from(#C90A6D), to(#FF48A0));
+  background: linear-gradient(to bottom right, #C90A6D, #FF48A0);
+}
+.wrapper .social-icons .icon:nth-of-type(2) a {
+  background: -webkit-gradient(linear, left top, right bottom, from(#5E5AEC), to(#3F9EFC));
+  background: linear-gradient(to bottom right, #5E5AEC, #3F9EFC);
+}
+.wrapper .social-icons .icon:nth-of-type(3) a {
+  background: -webkit-gradient(linear, left top, right bottom, from(#6452E9), to(#639FF9));
+  background: linear-gradient(to bottom right, #6452E9, #639FF9);
+}
+.wrapper .social-icons .icon h4 {
+  color: #080911;
+  font-size: 1em;
+  margin-top: 1.3em;
+  margin-bottom: .2em;
+}
+.wrapper .social-icons .icon p {
+  color: #666B7D;
+  font-size: 12px;
+}
+
+.concept {
+  position: absolute;
+  bottom: 25px;
+  color: #AAB0C4;
+  font-size: .9em;
+  font-weight: 400;
+}
+.concept a {
+  color: #ac1966;
+  text-decoration: none;
+}
+.mac-marital-icons {
+    display: inline-block;
+    width: 2rem;
+    margin-left: 0.25rem;
+    margin-right: 0.25rem;
+}
+.mac-marital-icons img {
+    width: 100%;
+    height: auto;
+}
+.profile-pic {
+        width: 200px;
+        height: 200px;
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.644) 1px 1px 2px;
+        border: solid rgba(128, 128, 128, 0.623) 1px;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<ul class="nav nav-tabs" style="margin-bottom: 1rem;">
+    <li class="nav-item">
+      <a class="nav-link active" style="
+      box-shadow: black 2px -2px 3px;
+  " href="{% url 'user-dashboard' %}">General Results</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'show-has-liked'%}">Interested</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'show-was-liked'%}">Have Shown Interest</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'show-matched' %}">Matched</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'show-has-unliked' %}">Not-Interested</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'show-blocked' %}">Blocked</a>
+    </li>
+</ul>
+<div class="row">
+    <div class="col-md-3 mb-3">
+        <div id="filter-wrap">
+            <div id="filter-h1">
+                <h1>Dashboard</h1>
+            </div>
+            <div id="filter">
+                <h4>Find Your Match</h4>
+                <form action="" method="post" enctype="multipart/form-data" id="filter-form">
+                    {% csrf_token %}
+                    <input type="text" id="id_dash" name="dash" value="1" style="display: none;">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check-mother-tongue">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Mother Tongue
+                        </label>
+                    </div>
+                    <div id="div_mother_tongue" style="display: none;">
+                        <select name="mother_tongue" class="form-control" id="id_mother_tongue" multiple>
+                            <option value="No Preference">No Preference</option>
+                            {% for lang in lang_list %}
+                                <option value="{{lang}}">{{lang}}</option>
+                            {% endfor %}
+                        </select>
+                        <small>Use Ctrl (or ⌘) + Click to select/deselect multiple options</small>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check-rite">
+                        <label class="form-check-label" for="check-rite">
+                          Rite
+                        </label>
+                    </div>
+                    <div id="div_rite" style="display: none;">
+                        <select name="rite" class="form-control" id="id_rite" multiple>
+                            <option value="No Preference">No Preference</option>
+                            <option value="Latin">Latin</option>
+                            <option value="Syro Malankara">Syro Malankara</option>
+                            <option value="Syro Malabar">Syro Malabar</option>
+                            <option value="Other">Other</option>
+                        </select>
+                        <small>Use Ctrl (or ⌘) + Click to select/deselect multiple options</small>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check-lower-age">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Lower Age Limit
+                        </label>
+                    </div>
+                    <div id="lower-age" style="display: none;">
+                        <input type="number" min=18 name="lower-age" step=1 id="id_lower-age" class="form-control" placeholder="Lower Age Limit">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check-upper-age">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Upper Age Limit
+                        </label>
+                    </div>
+                    <div id="upper-age" style="display: none;">
+                        <input type="number" min=18 max=100 name="upper-age" step=1 id="id_upper-age" class="form-control" placeholder="Upper Age Limit">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check-lower-salary">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Lower Salary Limit
+                        </label>
+                    </div>
+                    <div id="lower-salary" style="display: none;">
+                        <input type="number" min=0 name="lower-salary" step=1 id="id_lower-salary" class="form-control" placeholder="Lower Salary Limit">
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" value="" id="check-upper-salary">
+                        <label class="form-check-label" for="defaultCheck1">
+                          Upper Salary Limit
+                        </label>
+                    </div>
+                    <div id="upper-salary" style="display: none;">
+                        <input type="number" min=0 name="upper-salary" step=1 id="id_upper-salary" class="form-control" placeholder="Upper Salary Limit">
+                    </div>
+                    <br>
+                    <button type="submit" style="display: none;" id="filter-submit"></button>
+                </form>
+                <div style="text-align: center;">
+                    <a href="{% url 'user-dashboard'%}" class="btn btn-danger btn-float" id="filter-clear" title="Clear"><i class="fas fa-sync-alt"></i></a>
+                    <button class="btn btn-danger" id="submit-filter">Filter</button>
+                </div>
+                <!-- <hr>
+                <h4>Check Out</h4>
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 1rem;"><a class="btn btn-primary">Whom You've Liked</a></li>
+                    <li><a class="btn btn-primary">Whom You've Been Matched With</a></li>
+                </ul> -->
+            </div>
+        </div>
+        <br>
+    </div>
+    <br>
+    <div class="col-md-9">
+        <table id="user-table" class="table table-responsive-lg" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Date Util</th>
+                    <th style="display: none;">Name</th>
+                </tr>
+            </thead>
+            <tbody id="tbody">
+                {% for app in recommended_users %}
+                {% if app.status == "Active" %}
+                <tr style="margin: 1rem;">
+                    <td>{{app.created|date:"YmdHis"}}</td>
+                    <td style="padding: 0.5rem;">
+                        <!-- <div class="media">
+
+                            <img src="https://i.pinimg.com/originals/53/44/43/53444374602ecbf74712ed96fc9ed357.jpg" height="200" width="200" class="mr-3" alt="Profile Image">
+                            <div class="media-body">
+                                <h5 class="mt-0"><a href="{% url 'user-view' app.id%}"> {{app.first_name}} {{app.last_name|make_list|slice:":1"|join:""}}.</a></h5>
+                                <p>
+                                    {{app.mother_tongue}}
+                                        <br>
+                                    {{app.age}}
+                                        <br>
+                                    {% if app.occupation != None %}
+                                        {{app.occupation}}
+                                            <br>
+                                    {% endif %}
+                                    {% if app.about_yourself|length %}
+                                        {{app.about_yourself}}
+                                            <br>
+                                    {% endif %}  
+                                    <div>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis est quaerat vero rerum eius laborum. Ipsum deserunt magnam alias quos natus fugiat voluptates optio, architecto unde error quae porro debitis.</div>                 
+                                </p>
+                            </div>
+                        </div> -->
+                        <div class="our-card">
+                            <div class="col media">
+                                <div class="mr-3 profile-pic" style="background: url('{% profile app %}');
+                                background-size: cover;
+                                background-position: center;
+                                background-repeat: no-repeat;"></div>
+                                <div style="display:inline-block;position:relative;top:80px;">
+                                    <h5 class="mt-0"><a href="{% url 'user-view' app.id%}"> {{app.first_name}}
+                                            {{app.last_name|make_list|slice:":1"|join:""}}.</a></h5>
+                                    <p>
+                                        {{app.mother_tongue}}
+                                        <br>
+                                        {{app.date_of_birth|timesince|split:", "}}
+                                        <br>
+                                        {% if app.occupation != None %}
+                                        {{app.occupation}}
+                                        <br>
+                                        {% endif %}
+                                    </p>
+                                </div>
+                            </div>
+                            <hr>
+                            <div style="text-align: justify; padding: 0.5rem;">
+                                {% if app.about_yourself|length %}
+                                {{app.about_yourself}}
+                                {% endif %}
+                            </div>
+                            {% if app.marital_status != 'Single' %}
+                                <div style="text-align: right; padding: 0.5rem;">
+                                    {% if app.marital_status == 'Widowed' %}
+                                        <div class='mac-marital-icons' title="Widowed">
+                                            <img src="{% static 'main/img/widowed.png' %}" alt="Widow">
+                                        </div>
+                                    {% endif %}
+                                    {% if app.marital_status == 'Divorced' %}
+                                        <div class='mac-marital-icons' title="Divorced">
+                                            <img src="{% static 'main/img/divorced.png' %}" alt="Divorced">
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% endif %}
+                            {% if app.disability == 'Yes' %}
+                                <div class='mac-marital-icons' title="Disabled">
+                                    <img src="{% static 'main/img/disabled.png' %}" alt="Disabled">
+                                </div>
+                            {% endif %}
+                        </div>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+<script>
+    window.onload=()=>{
+        if (window.location.hash == "#loaded"){
+            window.location.hash = "";
+            window.location.reload();
+        }
+        else{
+            window.location.hash = "#loaded";
+        }
+    }
+</script>
+<script>
+    $(document).ready(() => {
+        $('#user-table').DataTable({
+                "columnDefs": [
+                { "type": "num", "targets": 0, "visible": false }
+                ],
+                "order": [[0, 'desc']]
+            });
+    });
+</script>
+<script>
+    $("#check-mother-tongue").change(()=>{
+        if (document.getElementById("check-mother-tongue").checked){
+            document.getElementById("div_mother_tongue").style.display = "block";    
+        }        
+        else{
+            document.getElementById("div_mother_tongue").style.display = "none"; 
+        }
+    });
+    $("#check-rite").change(()=>{
+        if (document.getElementById("check-rite").checked){
+            document.getElementById("div_rite").style.display = "block";    
+        }        
+        else{
+            document.getElementById("div_rite").style.display = "none"; 
+        }
+    });
+    $("#check-lower-age").change(()=>{
+        if (document.getElementById("check-lower-age").checked){
+            document.getElementById("lower-age").style.display = "block";    
+        }        
+        else{
+            document.getElementById("lower-age").style.display = "none"; 
+        }
+    });
+    $("#check-upper-age").change(()=>{
+        if (document.getElementById("check-upper-age").checked){
+            document.getElementById("upper-age").style.display = "block";    
+        }        
+        else{
+            document.getElementById("upper-age").style.display = "none"; 
+            
+        }
+    });
+    $("#check-lower-salary").change(()=>{
+        if (document.getElementById("check-lower-salary").checked){
+            document.getElementById("lower-salary").style.display = "block";    
+        }        
+        else{
+            document.getElementById("lower-salary").style.display = "none"; 
+        }
+    });
+    $("#check-upper-salary").change(()=>{
+        if (document.getElementById("check-upper-salary").checked){
+            document.getElementById("upper-salary").style.display = "block";    
+        }        
+        else{
+            document.getElementById("upper-salary").style.display = "none";         
+        }
+    });
+    $("#submit-filter").click(() => {
+        if (document.getElementById("check-mother-tongue").checked){
+            if (document.getElementById("id_mother_tongue").value.length < 1){
+                document.getElementById("id_mother_tongue").children[0].selected = true;
+            }
+        }
+        else{
+            document.getElementById("id_mother_tongue").children[0].selected = true;
+        }
+        if (document.getElementById("check-rite").checked){
+            if (document.getElementById("id_rite").value.length < 1){
+                document.getElementById("id_rite").children[0].selected = true;
+            }
+        }
+        else{
+            document.getElementById("id_rite").children[0].selected = true;
+        }
+        if (document.getElementById("check-lower-age").checked){
+            if (document.getElementById("id_lower-age").value.length < 1){
+                document.getElementById("id_lower-age").value = 0;
+            }   
+            else{
+                document.getElementById("id_lower-age").required = true;
+            }
+        }
+        else{
+            document.getElementById("id_lower-age").value = 0;
+        }
+        if (document.getElementById("check-upper-age").checked){
+            if (document.getElementById("id_upper-age").value.length < 1){
+                document.getElementById("id_upper-age").value = document.getElementById("id_lower-age").value;
+            }
+            else{
+                document.getElementById("id_upper-age").required = true;
+            }
+        }
+        else{
+            document.getElementById("id_upper-age").value = 0;
+        }
+        if (document.getElementById("check-lower-salary").checked){
+            if (document.getElementById("id_lower-salary").value.length < 1){
+                document.getElementById("id_lower-salary").value = 0;
+            }
+            else{
+                document.getElementById("id_lower-salary").required = true;
+            }
+        }
+        else{
+            document.getElementById("id_lower-salary").value = 0;
+        }
+        if (document.getElementById("check-upper-salary").checked){
+            if (document.getElementById("id_upper-salary").value.length < 1){
+                document.getElementById("id_upper-salary").value = document.getElementById("id_lower-salary").value;
+            }
+            else{
+                document.getElementById("id_upper-salary").required = true;
+            }
+        }
+        else{
+            document.getElementById("id_upper-salary").value = 0;
+        }
+        document.getElementById("filter-form").submit();
+    });
+</script>
+{% endblock %}
+
+
+
+
+<!-- <div class="" style="border: 1px solid black;padding:10px">
+
+    <div class="row">
+        <div class="col">
+            <img src="https://i.pinimg.com/originals/53/44/43/53444374602ecbf74712ed96fc9ed357.jpg" height="200"
+                width="200" class="mr-3 img-fluid" alt="Profile Image">
+
+            <div style="display:inline-block;position:relative;top:80px;">
+                <h5 class="mt-0"><a href="/user-view/103/"> Abhijit E.</a></h5>
+                <p>
+                    English
+                    <br>
+                    23
+                    <br>
+
+                    Engineer
+                    <br>
+
+                </p>
+            </div>
+        </div>
+
+
+    </div>
+    <hr>
+
+    <div class="col-sm">Lorem ipsum dolor, sit amet consectetur adipisicing elit. Veritatis est quaerat vero rerum eius
+        laborum. Ipsum deserunt magnam alias quos natus fugiat voluptates optio, architecto unde error quae porro
+        debitis.</div>
+
+</div> -->

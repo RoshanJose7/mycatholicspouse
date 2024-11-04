@@ -1,0 +1,1563 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load custom_templates %}
+{% block title %}
+User Profile
+{% endblock %}
+{% block header %}        
+<style>
+    body {
+        background-color: #121212;
+        color: antiquewhite;
+        overflow-x: hidden;
+    }
+    #cert > *{
+        display: block;
+        margin: 2rem 0;
+    }
+    #cert > *:first-child {
+        display: block;
+        margin-top: 0;
+        margin-bottom: 2rem;
+    }
+    #self-declaration > input:focus {
+        outline: none;
+    }
+    #self-declaration > input {
+        border: none;
+        border-bottom: 0.01rem solid #000;
+        border-radius: 0;
+        height: 1.25rem;
+    }
+    .hide{
+        display: none;
+    }
+    .attachment > *{
+        display: block;
+        margin-top: 4rem;
+        margin-bottom: 4rem;
+    }
+    .anim-heading{
+        margin-left: 2rem;
+        animation: head-anim 0.5s ease-in forwards;
+    }
+    
+    .error-msg{
+        color: red;
+    }
+    
+    .button-style{
+        display: inline-block;
+    }
+    
+    @keyframes head-anim{
+        to{
+            margin-left: 0;
+        }
+    }
+    .form-check-label{
+        color: rgb(255, 255, 255);
+    }
+    .form-check-input:disabled~.form-check-label, .form-check-input[disabled]~.form-check-label{
+        color: rgb(255, 255, 255);
+    }
+    /* .image{
+        position:relative;
+        overflow:hidden;
+        padding-bottom:100%;
+        border-radius: 50%;
+        border: solid white 0.5rem;
+    }
+    .image img{
+        position:absolute;
+        left: 0;
+        width: 100%;
+    } */
+    
+    .image {
+        width: 300px;
+        height: 300px;
+        background: url("{% profile application %}");
+        background-size: cover;
+        background-position: center;
+        border-radius: 100%;
+        border: solid white 5px;
+    }
+
+    .wrapper{
+        text-align: center;
+    }
+    
+    .image-outer-div{
+        display: grid;
+        width: 100%;
+        place-content: center;
+    }
+    
+    .col-sm{
+        text-align: center;
+    }
+    .mac-div {
+        text-align: center;
+    }
+
+    .watermark {
+        background: url("/media/watermark.svg");
+        background-repeat: round;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+
+    .family-photo {
+        background: url("{% carousel application.family_photo_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .your_photo_1 {
+        background: url("{% carousel application.your_photo_1_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .your_photo_2 {
+        background: url("{% carousel application.your_photo_2_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .your_photo_3 {
+        background: url("{% carousel application.your_photo_3_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+
+    
+    /* .mac-image {
+        display: inline-block;
+        max-height: 30rem;
+        width: auto;
+    } */
+</style>
+<script>
+    var is_clicked = false;
+</script>
+{% endblock %}
+{% block content %}
+{% with application as app %}
+<div class="modal" tabindex="-1" id="reject-reason">
+    <div class="modal-dialog">
+        <div class="modal-content" style="background-color: #1E1E1E;">
+            <div class="modal-header">
+                <h5 class="modal-title">Enter Reason for Rejection</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <textarea id="reject-info" style="width: 100%;" cols="30" rows="10"></textarea>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="button" id="ultimate-reject-btn" class="btn btn-primary">Save changes</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <div class="wrapper">
+        <div class="image-outer-div">
+            <div class="image">
+                <!-- <img src="/media/{{app.passport_photo_1}}" class="img img-responsive full-width"> -->
+            </div>
+        </div>
+    </div>
+    <div class="col-md-12 mb-3" style="padding-top: 1rem;">
+        <div class="card mb-3">
+            <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                <ol class="carousel-indicators">
+                    <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                    <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                    <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                    <li data-target="#carouselExampleCaptions" data-slide-to="3"></li>
+                </ol>
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <div class="mac-div">
+                            <a href="{% url 'image-preview' app.id 0 %}" target="__blank">
+                                <div class='family-photo'>
+                                    <div class="watermark"></div>
+                                </div>
+                            </a>                  
+                        </div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Family Photo</h5>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="mac-div">
+                            <a href="{% url 'image-preview' app.id 1 %}" target="__blank">
+                                <div class="your_photo_1">
+                                    <div class="watermark"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Photo #1</h5>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="mac-div">
+                            <a href="{% url 'image-preview' app.id 2 %}" target="__blank">
+                                <div class="your_photo_2">
+                                    <div class="watermark"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Photo #2</h5>
+                        </div>
+                    </div>
+                    <div class="carousel-item">
+                        <div class="mac-div">
+                            <a href="{% url 'image-preview' app.id 3 %}" target="__blank">
+                                <div class="your_photo_3">
+                                    <div class="watermark"></div>
+                                </div>
+                            </a>
+                        </div>
+                        <div class="carousel-caption d-none d-md-block">
+                            <h5>Photo #3</h5>
+                        </div>
+                    </div>
+                </div>
+                <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container">
+    <center>
+        <a href="{% url 'admin-user-view' app.id %}" class="btn btn-outline-info" style="margin: 1rem;">View Profile as a User</a>
+        <a href="/admin/main/matrimonyapplication/{{app.id}}/change/" class="btn btn-outline-danger" style="margin: 1rem;">Advanced Edit</a>
+        <a href="{% url 'print-profile' app.email %}" class="btn btn-outline-warning" style="margin: 1rem;">Print</a>
+    </center>
+</div>
+<div class="container">
+    <h4>Status : {{app.status}}</h4>
+    <div class="form-group">
+        <select name="status" id="status" class="form-control">
+            <option value="Active" {%  if app.status == 'Active' %}
+            selected
+            {% endif %}>Active</option>
+            <option value="Inactive"{%  if app.status == 'Inactive' %}
+            selected
+            {% endif %}>Inactive</option>
+            <option value="Blocked"{%  if app.status == 'Blocked' %}
+            selected
+            {% endif %}>Blocked</option>
+        </select>
+    </div>
+    <button id='status-update' class='btn btn-info'>Update</button>
+    {% if app.is_approved %}
+    <h5>>&nbsp;Subs. Start : {{app.subs_start}}</h5>
+    <h5>>&nbsp;Subs. End : {{app.subs_end}}</h5>
+    {% endif %}
+</div>
+<div class="container">
+    <h4>Application Details : </h4>
+    <h5>Approved : {% if app.is_approved %}
+        Yes
+        {% else %}
+        No
+        {% endif %}</h5>
+        <h5>Rejected : {%  if app.is_rejected %}
+            Yes
+            {% else %}
+            No
+            {% endif %}</h5>
+            <h5>
+                Settled : {%  if app.is_settled %}
+                Yes
+                {% else %}
+                No
+                {% endif %}
+            </h5>
+        </div>
+        {% if not application.is_approved or not application.is_rejected %}
+        <div style="display: flex;" class="container">
+            {% if not application.is_approved %}
+            <button id="approve-btn" style="margin: 5px;" class="btn btn-success btn-lg"><i
+                class="fas fa-check"></i>&nbsp;&nbsp;Approve</button>
+                {% endif %}
+                {% if not application.is_rejected %}
+                <button id="disapprove-btn" style="margin: 5px;" data-toggle="modal" data-target="#reject-reason"
+                class="btn btn-danger btn-lg"><i class="fas fa-times"></i>&nbsp;&nbsp;Reject</button>
+                {% endif %}
+                <a href="{% url 'admin-settle-app' app.id %}" class="btn btn-warning btn-lg"  style="margin: 5px;">{% if app.is_settled %}UN{% endif %}SETTLE</a>
+            </div>    
+            {% endif %}
+            <div class="container">
+                <form action="{% url 'admin-edit-profile' app.email %}" method="POST" enctype="multipart/form-data" name="matrimony-form" id="matrimony-form">
+                    <input type="email" name="email" id="id_email" value="{{app.email}}" required style="position: fixed; right: 200vw;">
+                    <div id="0" class="main-div hide">
+                        <progress id="file" style="width: 100%; height: 2rem;" value="10" max="70"></progress>
+                        <input type="hidden" name="Primary Details" value="____PRIMARY DETAILS____">
+                        <h4 style="padding: 1rem 0;" class="anim-heading">PRIMARY DETAILS</h4>
+                        <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="id_first_name">First Name</label>
+                                <input type="text" class="form-control" name="first_name" id="id_first_name" value="{{app.first_name}}" placeholder="First Name" required>
+                                <ul class="error-msg" id="first_name_error">
+                                </ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_middle_name">Middle Name</label>
+                                <input type="text" class="form-control" name="middle_name" id="id_middle_name" {% if app.middle_name != None %} value="{{app.middle_name}}" {% endif %} placeholder="Middle Name" required>
+                                <ul class="error-msg" id="middle_name_error">
+                                </ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_last_name">Last Name</label>
+                                <input type="text" class="form-control" name="last_name" {% if app.last_name %} value='{{app.last_name}}' {% endif %} id="id_last_name" placeholder="Last Name" required>
+                                <ul class="error-msg" id="last_name_error"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="id_email">Email</label>
+                                <div class="form-control">
+                                    {{app.email}}
+                                </div>
+                                <ul class="error-msg" id="email_error"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_phone_number">Phone Number</label>
+                                <input type="text" class="form-control" name="phone_number" {% if app.phone_number %} value='{{app.phone_number|make_list|slice:"3:"|join:""}}' {% endif %} id="id_phone_number" placeholder="Phone Number" required>
+                                <small class="text-mute">Enter 10 digit phone no.</small>
+                                <ul class="error-msg" id="phone_error"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_mother_tongue">Mother Tongue</label>
+                                <select class="form-control" name="mother_tongue" id="id_mother_tongue" required>
+                                    {{lang_list}}
+                                    {% for lang, _ in lang_list.items %}
+                                    {% if lang == app.mother_tongue %}
+                                    <option value="{{lang}}" selected>{{lang}}</option>
+                                    {% else %}
+                                    <option value="{{lang}}">{{lang}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <ul class="error-msg" id="mt_error"></ul>
+                            </div>
+                        </div>
+                        <label for="id_gender">Gender</label>
+                        <div class="form-group" id="id_gender">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" id="male" value="Male" {% if app.gender == "Male" %} checked {% endif %}>
+                                <label class="form-check-label" for="male">Male</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Gender" id="female" value="Female" {% if app.gender == "Female" %} checked {% endif %}>
+                                <label class="form-check-label" for="female">Female</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="address_1">Address Line #1</label>
+                            <input class="form-control" type="text" name="addr_1" {% if app.addr_1 %} value='{{app.addr_1}}' {% endif %} id="id_addr_1" placeholder="Address Line 1" required>
+                            <ul class="error-msg" id="addr_l1_error"></ul>
+                        </div>
+                        <div class="form-group">
+                            <label for="address_2">Address Line #2</label>
+                            <input class="form-control" type="text" name="addr_2" {% if app.addr_2 %} value='{{app.addr_2}}' {% endif %} id="id_addr_2" placeholder="Address Line 2">
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-3">
+                                <label for="city">City</label>
+                                <input type="text" class="form-control" name="city" {% if app.city %} value='{{app.city}}' {% endif %} id="id_city" placeholder="City" required>
+                                <ul class="error-msg" id="ct_error"></ul>
+                            </div>
+                            <div class="form-group col-md-3">
+                                <label for="state">State</label>
+                                <select id="id_state" class="form-control" {% if app.state %} value='{{app.state}}' {% endif %} name="state" required>
+                                    <option value="Andhra Pradesh">Andhra Pradesh</option>
+                                    <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                                    <option value="Assam">Assam</option>
+                                    <option value="Bihar">Bihar</option>
+                                    <option value="Chhattisgarh">Chhattisgarh</option>
+                                    <option value="Goa">Goa</option>
+                                    <option value="Gujarat">Gujarat</option>
+                                    <option value="Haryana">Haryana</option>
+                                    <option value="Himachal Pradesh">Himachal Pradesh</option>
+                                    <option value="Jharkhand">Jharkhand</option>
+                                    <option value="Karnataka" selected>Karnataka</option>
+                                    <option value="Kerala">Kerala</option>
+                                    <option value="Madhya Pradesh">Madhya Pradesh</option>
+                                    <option value="Maharashtra">Maharashtra</option>
+                                    <option value="Manipur">Manipur</option>
+                                    <option value="Meghalaya">Meghalaya</option>
+                                    <option value="Mizoram">Mizoram</option>
+                                    <option value="Nagaland">Nagaland</option>
+                                    <option value="Odisha">Odisha</option>
+                                    <option value="Punjab">Punjab</option>
+                                    <option value="Rajasthan">Rajasthan</option>
+                                    <option value="Sikkim">Sikkim</option>
+                                    <option value="Tamil Nadu">Tamil Nadu</option>
+                                    <option value="Telangana">Telangana</option>
+                                    <option value="Uttar Pradesh">Uttar Pradesh</option>
+                                    <option value="Uttarakhand">Uttarakhand</option>
+                                    <option value="West Bengal">West Bengal</option>
+                                </select>
+                                <ul class="error-msg" id="state_error"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="country">Country</label>
+                                <select class="form-control" name="country" {% if app.country %} value='{{app.country}}' {% endif %} id="id_country" required>
+                                    <option value="India" selected>India</option>
+                                </select>
+                                <ul class="error-msg" id="country_error"></ul>
+                            </div>
+                            <div class="form-group col-md-2">
+                                <label for="zipcode">Pin Code</label>
+                                <input type="text" class="form-control" {% if app.pin_code %} value='{{app.pin_code}}' {% endif %} name="pin_code" id="id_pin_code" placeholder="Pin Code" required>
+                                <ul class="error-msg" id="zip_error"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="1" class="main-div hide">
+                        <progress id="file" style="width: 100%; height: 2rem;" value="20" max="70"></progress>
+                        <input type="hidden" name="Educational Details" value="____EDUCATIONAL DETAILS____">
+                        <h4 style="padding: 1rem 0;" class="anim-heading">EDUCATIONAL DETAILS</h4>
+                        <!-- <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a> -->
+                        <br>
+                        <label for="id_ed_lvl">Education Level</label>
+                        <div class="form-group" id="id_ed_lvl">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Education Level" id="less_than_10th" value="Less Than 10th" {% if app.education_level == "Less Than 10th" %} checked {% endif %}>
+                                <label class="form-check-label" for="less_than_10th" >Less than 10<sup>th</sup></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Education Level" id="10th" value="10th" {% if app.education_level == "10th" %} checked {% endif %}>
+                                <label class="form-check-label" for="10th">10<sup>th</sup></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Education Level" id="12th" value="12th" {% if app.education_level == "12th" %} checked {% endif %}>
+                                <label class="form-check-label" for="12th">12<sup>th</sup></label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Education Level" id="graduate" value="Graduate" {% if app.education_level == "Graduate" %} checked {% endif %}>
+                                <label class="form-check-label" for="graduate">Graduate</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Education Level" id="post_graduate" value="Post Graduate" {% if app.education_level == "Post Graduate" %} checked {% endif %}>
+                                <label class="form-check-label" for="post_graduate">Post Graduate</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Education Level" id="other" value="Other" {% if app.education_level == "Other" %} checked {% endif %}>
+                                <label class="form-check-label" for="other">Other</label>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="10th_marks">10<sup>th</sup> Marks (in %)</label>
+                                <input type="number" class="form-control" name="tenth_marks" {% if app.tenth_marks is not None %} value="{{app.tenth_marks}}" {% endif %} id="id_tenth_marks" placeholder="10th Marks">
+                                <ul class="error-msg" id="10th_marks_error"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="school">School</label>
+                                <input type="text" class="form-control" name="tenth_school" {% if app.tenth_school is not None %} value="{{app.tenth_school}}" {% endif %} id="id_tenth_school" placeholder="School">
+                                <ul class="error-msg" id="10th_school_error"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="12th_marks">12<sup>th</sup> Marks (in %)</label>
+                                <input type="number" class="form-control" name="hs_marks" {% if app.hs_marks is not None %} value="{{app.hs_marks}}" {% endif %} id="id_hs_marks" placeholder="12th Marks">
+                                <ul class="error-msg" id="12th_marks_error"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="school_college">School/College</label>
+                                <input type="text" class="form-control" name="hs_school" {% if app.hs_school is not None %} value="{{app.hs_school}}" {% endif %} id="id_hs_school" placeholder="School/College">
+                                <ul class="error-msg" id="12th_school_error"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="grad_marks">Graduate Marks (in %)</label>
+                                <input type="number" class="form-control" name="grad_marks" {% if app.grad_marks is not None %} value="{{app.grad_marks}}" {% endif %} id="id_grad_marks" placeholder="Graduate Marks">
+                                <ul class="error-msg" id="grad_marks_error"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="school_uni">College/University</label>
+                                <input type="text" class="form-control" name="grad_school" {% if app.grad_school is not None %} value="{{app.grad_school}}" {% endif %} id="id_grad_school" placeholder="College/University">
+                                <ul class="error-msg" id="grad_school_error"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="post_grad_marks">Post-Graduate Marks (in %)</label>
+                                <input type="number" class="form-control" name="post_grad_marks" {% if app.post_grad_marks is not None %} value="{{app.post_grad_marks}}" {% endif %} id="id_post_grad_marks" placeholder="Post-Graduate Marks">
+                                <ul class="error-msg" id="pg_marks_error"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="uni">University</label>
+                                <input type="text" class="form-control" name="post_grad_school" {% if app.post_grad_school is not None %} value="{{app.post_grad_school}}" {% endif %}  id="id_post_grad_school" placeholder="University">
+                                <ul class="error-msg" id="pg_school_error"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="id_other_type">Degree Type</label>
+                                <input type="text" class="form-control" name="other_type" {% if app.other_type is not None %} value="{{app.other_type}}" {% endif %}  id="id_other_type" placeholder="Degree Type">
+                                <ul class="error-msg" id="other_type_error"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="id_other_marks">Marks (in %)</label>
+                                <input type="number" class="form-control" name="other_marks" {% if app.other_marks is not None %} value="{{app.other_marks}}" {% endif %}  id="id_other_marks" placeholder="Marks">
+                                <ul class="error-msg" id="other_marks_error"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="uni">College/University</label>
+                                <input type="text" class="form-control" name="other_school" {% if app.other_school is not None %} value="{{app.other_school}}" {% endif %}  id="id_other_school" placeholder="College/University">
+                                <ul class="error-msg" id="other_school_error"></ul>
+                            </div>
+                        </div>
+                        <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+                    </div>
+                    <div id="2" class="main-div hide">
+                        <progress id="file" style="width: 100%; height: 2rem;" value="30" max="70"></progress>
+                        <input type="hidden" name="Personal Details" value="____PERSONAL DETAILS____">
+                        <h4 style="padding: 1rem 0;" class="anim-heading">PERSONAL DETAILS</h4>
+                        <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="height">Height (in cm)</label>
+                                <input type="number" min=0 step=0.1 class="form-control" name="height" id="id_height" placeholder="Height" value={{app.height}} required>
+                                <ul class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="weight">Weight (in Kg)</label>
+                                <input type="number" min=0 step=0.1 class="form-control" name="weight" id="id_weight" placeholder="Weight" value={{app.weight}} required>
+                                <ul class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="dob">Date of Birth (DOB)</label>
+                                <input type="date" name="date_of_birth" class="form-control" id="id_date_of_birth" value={{ app.date_of_birth|date:"Y-m-d" }} required> <!-- disable this -->
+                                <ul class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="birth_place">Birth Place</label>
+                                <input type="text" name="place_of_birth" class="form-control" id="id_place_of_birth" value="{{app.place_of_birth}}" placeholder="Birth Place" required>
+                                <ul class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="parish_baptized_at">Parish Baptized At</label>
+                                <input type="text" class="form-control" id="id_parish_baptized_at" placeholder="Parish Baptized At" value="{{app.parish_baptized_at}}" name="parish_baptized_at" required>
+                                <ul class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="present_parish">Present Parish</label>
+                                <input type="text" class="form-control" id="id_present_parish" placeholder="Present Parish" value="{{app.present_parish}}" name="present_parish" required>
+                                <ul class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="diocese">Diocese</label>
+                                <input type="text" class="form-control" id="id_diocese" placeholder="Diocese" name="diocese" value="{{app.diocese}}" required>
+                                <ul class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <label for="rite">Rite</label>
+                        <div class="form-group col-md-6" id="rite">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="rite" id="latin" value="Latin" {% if app.rite == "Latin" %} checked {% endif %}>
+                                <label class="form-check-label" for="latin">Latin</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="rite" id="syro-malabar" value="Syro Malabar" {% if app.rite == "Syro Malabar" %} checked {% endif %}>
+                                <label class="form-check-label" for="syro-malabar">Syro Malabar</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="rite" id="syro-malankara" value="Syro Malankara" {% if app.rite == "Syro Malankara" %} checked {% endif %}>
+                                <label class="form-check-label" for="syro-malankara">Syro Malankara</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="rite" id="other" value="Other" {% if app.rite == "Other" %} checked {% endif %}>
+                                <label class="form-check-label" for="other">Other</label>
+                            </div>
+                        </div>
+                        <label for="diet">Diet</label>
+                        <div class="form-group col-md-4" id="diet">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="diet" id="vegetarian" value="Vegetarian" {% if app.diet == "Vegetarian" %} checked {% endif %}>
+                                <label class="form-check-label" for="vegetarian">Vegetarian</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="diet" id="non_vegetarian" value="Non-Vegetarian" {% if app.diet == "Non-Vegetarian" %} checked {% endif %}>
+                                <label class="form-check-label" for="non_vegetarian">Non-Vegetarian</label>
+                            </div>
+                        </div>
+                        <label for="drink">Drink</label>
+                        <div class="form-group col-md-4" id="drink">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="drink" id="drink_Yes" value="Yes" {% if app.drink == "Yes" %} checked {% endif %}>
+                                <label class="form-check-label" for="Yes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="drink" id="drink_No" value="No" {% if app.drink == "No" %} checked {% endif %}>
+                                <label class="form-check-label" for="No">No</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="drink" id="drink_Occasionally" value="Occasionally" {% if app.drink == "Occasionally" %} checked {% endif %}>
+                                <label class="form-check-label" for="Occasionally">Occasionally</label>
+                            </div>
+                        </div>
+                        <label for="smoke">Smoke</label>
+                        <div class="form-group col-md-4" id="smoke">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="smoke" id="drink_Yes" value="Yes" {% if app.smoke == "Yes" %} checked {% endif %}>
+                                <label class="form-check-label" for="Yes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="smoke" id="drink_No" value="No" {% if app.smoke == "No" %} checked {% endif %}>
+                                <label class="form-check-label" for="No">No</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="smoke" id="drink_Occasionally" value="Occasionally" {% if app.smoke == "Occasionally" %} checked {% endif %}>
+                                <label class="form-check-label" for="Occasionally">Occasionally</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="occupation">Profession</label>
+                            <input type="text" class="form-control" id="id_occupation" placeholder="Profession" name="occupation" {% if app.occupation is not None %} value="{{app.occupation}}" {% endif %}>
+                            <ul class="error-msg"></ul>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="place_emp">Place of Employment</label>
+                                <input type="text" class="form-control" id="id_place_of_employment" placeholder="Place of Employment" name="place_of_employment" {% if app.place_of_employment is not None %} value="{{app.place_of_employment}}" {% endif %}>
+                                <ul class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="designation">Designation</label>
+                                <input type="text" class="form-control" id="id_designation" placeholder="Designation" name="designation" {% if app.designation is not None %} value="{{app.designation}}" {% endif %}>
+                                <ul class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="yrs_emp">Years of Employment</label>
+                                <input type="number" min=0 step=0.1 class="form-control" id="id_years_of_employment" placeholder="Years of Employment" name="years_of_employment" {% if app.years_of_employment is not None %} value={{app.years_of_employment}} {% endif %}>
+                                <ul class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="ann_inc">Annual Income (in ₹)</label>
+                                <input type="number" class="form-control" id="id_annual_income" placeholder="Annual Income" name="annual_income" {% if app.annual_income %} value='{{app.annual_income}}' {% endif %}>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="inc_extra">Any Other Income (in ₹)</label>
+                                <input type="number" class="form-control" id="id_other_income" placeholder="Any Other Income" name="other_income" {% if app.other_income %} value='{{app.other_income}}' {% endif %}>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="more_details">More Details about Yourself</label>
+                            <textarea id="id_about_yourself" cols="30" rows="5" name="about_yourself" class="form-control" placeholder="More details about yourself">{% if app.about_yourself %} {{app.about_yourself}} {% endif %}</textarea>
+                        </div>
+                        <label>Health Issues (if any)</label>
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="health_issues" id="health_issues_yes" value="Yes" {% if app.health_issues == "Yes" %} checked {% endif %}>
+                                <label class="form-check-label" for="health_issues_yes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="health_issues" id="health_issues_no" value="No" {% if app.health_issues == "No" %} checked {% endif %}>
+                                <label class="form-check-label" for="health_issues_no">No</label>
+                            </div>
+                            <textarea name="Health Issues" name="health_issues_details" id="id_health_issues_details" cols="30" rows="10" style="display: none;" class="form-control" placeholder="Health Issues">{% if app.health_issues_details %} {{app.health_issues_details}} {% endif %}</textarea>
+                            <script>
+                                yes_value = document.getElementById("health_issues_yes");
+                                yes_value.addEventListener("click", (e) => {
+                                    text = document.getElementById("id_health_issues_details");
+                                    text.style = "";
+                                });
+                                
+                                no_value = document.getElementById("health_issues_no");
+                                no_value.addEventListener("click", (e) => {
+                                    text = document.getElementById("id_health_issues_details");
+                                    text.style = "display: none;";
+                                });
+                            </script>
+                        </div>
+                        <label for="marital_status">Marital Status</label>
+                        <div class="form-group" id="marital_status">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Marital Status" id="Single" value="Single" {% if app.marital_status == "Single" %} checked {% endif %}>
+                                <label class="form-check-label" for="Single">Single</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Marital Status" id="Divorced" value="Divorced" {% if app.marital_status == "Divorced" %} checked {% endif %}>
+                                <label class="form-check-label" for="Divorced">Divorced</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Marital Status" id="Widowed" value="Widowed" {% if app.marital_status == "Widowed" %} checked {% endif %}>
+                                <label class="form-check-label" for="Widowed">Widowed</label>
+                            </div>
+                        </div>
+                        <label for="Disability">Disability</label>
+                        <div class="form-group">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Disability" id="Yes" value="Yes" {% if app.disability == "Yes" %} checked {% endif %}>
+                                <label class="form-check-label" for="Yes">Yes</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Disability" id="No" value="No" {% if app.disability == "No" %} checked {% endif %}>
+                                <label class="form-check-label" for="No">No</label>
+                            </div>
+                        </div>
+                        <label for="id_disability_type">Disability Type (if applicable)</label>
+                        <div class="form-group">
+                            <textarea id="id_disability_type" name="disability_type" class="form-control" required placeholder="Enter Disability">{{app.disability_type}}</textarea>
+                            <ul class="error-msg" id="id_error_disability"></ul>
+                        </div>
+                    </div>
+                    <div id="3" class="main-div hide">
+                        <progress id="file" style="width: 100%; height: 2rem;" value="40" max="70"></progress>
+                        <input type="hidden" name="Divorced" value="____DIVORCED____">
+                        <h4 style="padding: 1rem 0;" class="anim-heading">DIVORCED</h4>
+                        <div class="form-group">
+                            <label for="former_spouse">Former Spouse Name</label>
+                            <input type="text" class="form-control" id="id_former_spouse_name_1" {% if app.former_spouse_name_1 %} value='{{app.former_spouse_name_1}}' {% endif %} placeholder="Former Spouse Name" name="former_spouse_name_1">
+                            <ul class="error-msg" id="former_spouse_name_error1"></ul>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="marriage_date">Marriage Date</label>
+                                <input type="date" id="id_marriage_date_1" class="form-control" name="marriage_date_1" value={{app.marriage_date_1|date:"Y-m-d"}}>
+                                <ul class="error-msg" id="marriage_date_error1"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="divorce_date">Divorce Date</label>
+                                <input type="date" name="divorce_date" id="id_divorce_date" class="form-control" value={{app.divorce_date|date:"Y-m-d"}}>
+                                <ul class="error-msg" id="divorce_date_error1"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="marriage_annulment_date">Marriage Annulment Date</label>
+                                <input type="date" name="marriage_annulment_date" value={{app.marriage_annulment_date|date:"Y-m-d"}} id="id_marriage_annulment_date" class="form-control" >
+                                <ul class="error-msg" id="marriage_annulment_date_error1"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="div_crn">No. of Children (from this marriage)</label>
+                                <input type="number" name="no_of_children_1" {% if app.no_of_children_1 %} value='{{app.no_of_children_1}}' {% endif %} id="id_no_of_children_1" class="form-control" placeholder="No. of Children (from this marriage)">
+                                <ul class="error-msg" id="children_error1"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="div_son">No. of Sons</label>
+                                <input type="number" name="no_of_sons_1" {% if app.no_of_sons_1 %} value='{{app.no_of_sons_1}}' {% endif %} id="id_no_of_sons_1" class="form-control" placeholder="No. of Sons">
+                                <ul class="error-msg" id="sons_error1"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="div_dtr">No. of Daughters</label>
+                                <input type="number" name="no_of_daughters_1" {% if app.no_of_daughters_1 %} value='{{app.no_of_daughters_1}}' {% endif %} id="id_no_of_daughters_1" class="form-control" placeholder="No. of Daughters">
+                                <ul class="error-msg" id="daughters_error1"></ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addn_div">Additional Details</label>
+                            <textarea name="additional_details"  id="id_additional_details" cols="30" rows="5" class="form-control" placeholder="Additional Details">{% if app.additional_details %} {{app.additional_details}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                    <div id="4" class="main-div hide">
+                        <progress id="file" style="width: 100%; height: 2rem;" value="50" max="70"></progress>
+                        <input type="hidden" name="Widowed" value="____WIDOWED____">
+                        <h4 style="padding: 1rem 0;" class="anim-heading">WIDOWED</h4>
+                        <div class="form-group">
+                            <label for="former_spouse_wid">Former Spouse Name</label>
+                            <input type="text" name="former_spouse_name_2" {% if app.former_spouse_name_2 %} value='{{app.former_spouse_name_2}}' {% endif %} class="form-control" id="id_former_spouse_name_2" placeholder="Former Spouse Name">
+                            <ul id="former_spouse_name_error" class="error-msg"></ul>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="marriage_date_wid">Marriage Date</label>
+                                <input type="date" name="marriage_date_2"  value={{app.marriage_date_2|date:"Y-m-d"}} id="id_marriage_date_2" class="form-control">
+                                <ul id="marriage_date_error" class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="dt_dth">Date of Death</label>
+                                <input type="date" name="date_of_death" {% if app.date_of_death %} value={{app.date_of_death|date:"Y-m-d"}} {% endif %} id="id_date_of_death" class="form-control">
+                                <ul id="death_date_error" class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="wid_crn">No. of Children (from this marriage)</label>
+                                <input type="number" name="no_of_children_2" {% if app.no_of_children_2 %} value='{{app.no_of_children_2}}' {% endif %} id="id_no_of_children_2" class="form-control" placeholder="No. of Children (from this marriage)">
+                                <ul id="children_error" class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="wid_son">No. of Sons</label>
+                                <input type="number" name="no_of_sons_2" {% if app.no_of_sons_2 %} value='{{app.no_of_sons_2}}' {% endif %} id="id_no_of_sons_2" class="form-control" placeholder="No. of Sons">
+                                <ul id="sons_error" class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="wid_dtr">No. of Daughters</label>
+                                <input type="number" name="no_of_daughters_2" {% if app.no_of_daughters_2 %} value='{{app.no_of_daughters_2}}' {% endif %} id="id_no_of_daughters_2" class="form-control" placeholder="No. of Daughters">
+                                <ul id="daughters_error" class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="addn_wid">Additional Details</label>
+                            <textarea name="cause_of_death" id="id_cause_of_death" cols="30" rows="5" class="form-control" placeholder="Additional Details">{% if app.cause_of_death %} {{app.cause_of_death}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                    <div id="5" class="main-div hide">
+                        <progress id="file" style="width: 100%; height: 2rem;" value="60" max="70"></progress>
+                        <input type="hidden" name="Family Details" value="____FAMILY DETAILS____">
+                        <h4 style="padding: 1rem 0;" class="anim-heading">FAMILY DETAILS</h4>
+                        <!-- <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a> -->
+                        <div class="form-row">
+                            <div class="form-group col-md-6">
+                                <label for="mother_name">Mother's Name</label>
+                                <input type="text" class="form-control" id="id_mothers_name" {% if app.mothers_name %} value='{{app.mothers_name}}' {% endif %} name="mothers_name" placeholder="Mother's Name" required>
+                                <ul id="mothers_name_error" class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-6">
+                                <label for="father_name">Father's Name</label>
+                                <input type="text" class="form-control" id="id_fathers_name" {% if app.fathers_name %} value='{{app.fathers_name}}' {% endif %} name="fathers_name" placeholder="Father's Name" required>
+                                <ul id="fathers_name_error" class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group col-md-4">
+                                <label for="fam_sib">No. of Siblings</label>
+                                <input type="number" id="id_siblings" name="siblings" value='{{app.siblings}}' class="form-control" placeholder="No. of Siblings" required>
+                                <ul id="siblings_error" class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="fam_bro">No. of Brothers</label>
+                                <input type="number" id="id_brothers" name="brothers" value='{{app.brothers}}' class="form-control" placeholder="No. of Brothers" required>
+                                <ul id="brothers_error" class="error-msg"></ul>
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="fam_sis">No. of Sisters</label>
+                                <input type="number" id="id_sisters" value='{{app.sisters}}' name="sisters" class="form-control" placeholder="No. of Sisters" required>
+                                <ul id="sisters_error" class="error-msg"></ul>
+                            </div>
+                        </div>
+                        <label for="fam_values">Family Background</label>
+                        <div class="form-group" id="fam_values">
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Family Values" id="Traditional" value="Traditional" {% if app.values == "Traditional" %} checked {% endif %}>
+                                <label class="form-check-label" for="Traditional">Traditional</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Family Values" id="Moderate" value="Moderate" {% if app.values == "Moderate" %} checked {% endif %}>
+                                <label class="form-check-label" for="Moderate">Moderate</label>
+                            </div>
+                            <div class="form-check form-check-inline">
+                                <input class="form-check-input" type="radio" name="Family Values" id="Liberal" value="Liberal" {% if app.values == "Liberal" %} checked {% endif %}>
+                                <label class="form-check-label" for="Liberal">Liberal</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="members">Family Members Residing At Your Residence</label>
+                            <input type="number" class="form-control" id="id_family_members" {% if app.family_members != None %} value='{{app.family_members}}' {% endif %} name="family_members" placeholder="No. of Family Members" required>
+                            <ul id="family_members_error" class="error-msg"></ul>
+                        </div>
+                        <div class="form-group">
+                            <label for="abt_fam">About Family</label>
+                            <textarea cols=30 rows=5 type="text" class="form-control" name="about_family" id="id_about_family" placeholder="About Family">{% if app.about_family %} {{app.about_family}} {% endif %}</textarea>
+                        </div>
+                    </div>
+                    <div id="6" class="main-div hide">
+                        <input type="hidden" name="Partner Preference" value="____PARTNER PREFERENCE____">
+                        <h4 style="padding: 1rem 0;" class="anim-heading">PARTNER PREFERENCE</h4>
+                        <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a>
+                        <div>
+                            <h6>Age Group</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-5">
+                                    <input type="number" name="lower_age" id="id_lower_age" {% if app.lower_age %} value='{{app.lower_age}}' {% endif %} class="form-control" placeholder="Lower Age Bound" style="width: 100%;">
+                                    <ul class="error-msg" id="lower_age_bound_error"></ul>
+                                </div>
+                                <div class="form-group text-center col-md-2" style="line-height: 1.75rem;">
+                                    to
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <input type="number" name="upper_age" {% if app.upper_age %} value='{{app.upper_age}}' {% endif %} id="id_upper_age" class="form-control" placeholder="Upper Age Bound">
+                                    <ul class="error-msg" id="upper_age_bound_error"></ul>
+                                </div>                                
+                            </div>
+                            <h6>Language</h6>
+                            <div class="form-group ">
+                                <select name="language" id="id_language" class="form-control" multiple>                        
+                                    <option value="No Preference" {%  if True not in lang_list.values %} selected {% endif %}>No Preference</option>                        
+                                    {% for lang, bo in lang_list.items %}
+                                    {% if bo %}
+                                    <option value="{{lang}}" selected>{{lang}}</option>
+                                    {% else %}
+                                    <option value="{{lang}}">{{lang}}</option>
+                                    {% endif %}
+                                    {% endfor %}
+                                </select>
+                                <small>Ctrl (or ⌘) + Click to select/deselect multiple values. Ignore if you have no preference. </small>
+                                <ul class="error-msg" id="language_error"></ul>
+                            </div>
+                            
+                            <h6>Place of residence</h6>
+                            <div class="form-group ">
+                                <input type="text" name="place_of_residence" {% if app.place_of_residence %} value='{{app.place_of_residence}}' {% endif %} id="id_place_of_residence" class="form-control" placeholder="Place of residence">
+                                <ul class="error-msg" id="place_of_residence_error"></ul>
+                            </div>
+                            
+                            <h6>Education</h6>
+                            <div class="form-group ">
+                                <input type="text" name="education" {% if app.education %} value='{{app.education}}' {% endif %} id="id_education" class="form-control" placeholder="Education">
+                                <ul class="error-msg" id="education_error"></ul>
+                            </div>
+                            
+                            <h6>Profession</h6>
+                            <div class="form-group ">
+                                <input type="text" name="employment" {% if app.employment %} value='{{app.employment}}' {% endif %} id="id_employment" class="form-control" placeholder="Profession">
+                                <small>If you want to enter multiple professions, chain your preferred professions using semi-colons (;)</small>
+                                <ul class="error-msg" id="employment_error"></ul>
+                            </div>
+                            
+                            <h6>Salary</h6>
+                            <div class="form-row">
+                                <div class="form-group col-md-5">
+                                    <input type="number" name="salary_lower" {% if app.salary_lower %} value='{{app.salary_lower}}' {% endif %} id="id_salary_lower" class="form-control" placeholder="Salary Lower Bound">
+                                    <ul class="error-msg" id="salary_lower_error"></ul>
+                                </div>
+                                <div class="form-group text-center col-md-2" style="line-height: 1.75rem;">
+                                    to
+                                </div>
+                                <div class="form-group col-md-5">
+                                    <input type="number" name="salary_upper" {% if app.salary_upper %} value='{{app.salary_upper}}' {% endif %} id="id_salary_upper" class="form-control" placeholder="Salary Upper Bound">
+                                    <ul class="error-msg" id="salary_upper_error"></ul>
+                                </div>
+                            </div>
+                            
+                            <h6>Widow / Widower</h6>
+                            <div class="form-group" id="id_widow_widower" name="widow_widower">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Widow / Widower" id="prefer_yes" value="Yes" {% if app.widowed == "Yes" %} checked {% endif %}>
+                                    <label class="form-check-label" for="prefer_yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Widow / Widower" id="prefer_no" value="No" {% if app.widowed == "No" %} checked {% endif %}>
+                                    <label class="form-check-label" for="prefer_no">No</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Widow / Widower" id="widow_no_preference" value="No Preference" {% if app.widowed == "No Preference" %} checked {% endif %}>
+                                    <label class="form-check-label" for="widow_no_preference">No Preference</label>
+                                </div>
+                            </div>
+                            
+                            <h6>Do you want to marry someone with special needs?</h6>
+                            <div class="form-group" id="id_prefer_special_needs" name="prefer_special_needs">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="special_needs" id="special_needs_yes" value="Yes" {% if app.special_needs == "Yes" %} checked {% endif %}>
+                                    <label class="form-check-label" for="special_needs_yes">Yes</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="special_needs" id="special_needs_no" value="No" {% if app.special_needs == "No" %} checked {% endif %}>
+                                    <label class="form-check-label" for="special_needs_no">No</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="special_needs" id="special_no_preference" value="No Preference" {% if app.special_needs == "No Preference" %} checked {% endif %}>
+                                    <label class="form-check-label" for="special_no_preference">No Preference</label>
+                                </div><br>
+                                <small>You'll be given recommendations in accordance with your choice.</small>
+                            </div>
+                            
+                            <h6>Community</h6>
+                            <div class="form-group" id="community">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="community" id="prefer_latin" value="Latin" {% if app.community == "Latin" %} checked {% endif %}>
+                                    <label class="form-check-label" for="latin">Latin</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="community" id="prefer_syro-malabar" value="Syro Malabar" {% if app.community == "Syro Malabar" %} checked {% endif %}>
+                                    <label class="form-check-label" for="syro-malabar">Syro Malabar</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="community" id="prefer_syro-malankara" value="Syro Malankara" {% if app.community == "Syro Malankara" %} checked {% endif %}>
+                                    <label class="form-check-label" for="syro-malankara">Syro Malankara</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="community" id="prefer_other" value="Other" {% if app.community == "Other" %} checked {% endif %}>
+                                    <label class="form-check-label" for="other">Other</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="community" id="community_no_preference" value="No Preference" {% if app.community == "No Preference" %} checked {% endif %}>
+                                    <label class="form-check-label" for="community_no_preference">No Preference</label>
+                                </div>
+                            </div>
+                            
+                            <h6>Family Background</h6>
+                            <div class="form-group" id="fam_background">
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Family Background / Values" id="prefer_traditional" value="Traditional" {% if app.family_values == "Traditional" %} checked {% endif %}>
+                                    <label class="form-check-label" for="prefer_traditional">Traditional</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Family Background / Values" id="prefer_moderate" value="Moderate" {% if app.family_values == "Moderate" %} checked {% endif %}>
+                                    <label class="form-check-label" for="prefer_moderate">Moderate</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Family Background / Values" id="prefer_liberal" value="Liberal" {% if app.family_values == "Liberal" %} checked {% endif %}>
+                                    <label class="form-check-label" for="prefer_liberal">Liberal</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="Family Background / Values" id="family_no_preference" value="No Preference" {% if app.family_values == "No Preference" %} checked {% endif %}>
+                                    <label class="form-check-label" for="family_no_preference">No Preference</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="7" class="main-div attachment hide">
+                        <input type="hidden" name="Attachments" value="____ATTACHMENTS____">
+                        <label for="7"><h4 style="margin-top: 1rem;" class="anim-heading">ATTACHMENTS</h4></label> 
+                        <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a>
+                        <div class="custom-file">
+                            <input type="file" name="passport_photo_1" class="custom-file-input" accept=".png,.jpg,.bmp,.jpeg" id="id_passport_photo_1" required>
+                            <label class="custom-file-label" for="id_passport_photo_1">{% if app.passport_photo_1 is not None %}<a href="{% url 'image-preview' app.id 4 %}" target="__blank">Passport Photo: {{app.passport_photo_1}}{% else %}Passport Photo{% endif %}</a></label>
+                            <ul class="error-msg"></ul>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" name="family_photo_1" class="custom-file-input" id="id_family_photo_1" accept=".png,.jpg,.bmp,.jpeg" required>
+                            <label class="custom-file-label" for="id_family_photo_1">{% if app.family_photo_1 is not None %}<a href="{%url 'image-preview' app.id 0 %}" target="__blank">Family Photo: {{app.family_photo_1}}{% else %}Family Photo{% endif %}</a></label>
+                            <ul class="error-msg"></ul>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" name="your_photo_1_1" class="custom-file-input" id="id_your_photo_1_1" accept=".png,.jpg,.bmp,.jpeg" required>
+                            <label class="custom-file-label" for="id_your_photo_1_1">{% if app.your_photo_1_1 is not None %}<a href="{%url 'image-preview' app.id 1 %}" target="__blank">Your Photo #1: {{app.your_photo_1_1}}{% else %}Your Photo #1{% endif %}</a></label>
+                            <ul class="error-msg"></ul>
+                        </div>
+                        <div class="custom-file
+                            <input type="file" name="your_photo_2_1" class="custom-file-input" id="id_your_photo_2_1" accept=".png,.jpg,.bmp,.jpeg">
+                            <label class="custom-file-label" for="id_your_photo_2_1">{% if app.your_photo_2_1 is not None %}<a href="{%url 'image-preview' app.id 2 %}" target="__blank">Your Photo #2: {{app.your_photo_2_1}}{% else %}Your Photo #2{% endif %}</a></label>
+                            <ul class="error-msg"></ul>
+                        </div>
+                        <div class="custom-file">
+                            <input type="file" name="your_photo_3_1" class="custom-file-input" id="id_your_photo_3_1" accept=".png,.jpg,.bmp,.jpeg">
+                            <label class="custom-file-label" for="id_your_photo_3_1">{% if app.your_photo_3_1 is not None %}<a href="{% url 'image-preview' app.id 3 %}" target="__blank">Your Photo #3: {{app.your_photo_3_1}}{% else %}Your Photo #3{% endif %}</a></label>
+                            <ul class="error-msg"></ul>
+                        </div>
+                    </div>
+                    <div id="8" class="hide">
+                        <progress id="file" style="width: 100%; height: 2rem;" value="70" max="70"></progress>
+                        <h4 style="padding: 1rem 0;" class="anim-heading">SELF DECLARATION</h4>
+                        <!-- <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a> -->
+                        <div>
+                            <p id="self-declaration">
+                                I <input type="text" style="width:40%;">, Son / Daughter of Mr. / Mrs. <input type="text" style="width: 40%;">,
+                                age <input type="text" style="width:2rem;"> years, resident of <input type="text"> in the District of  <input type="text">, 
+                                State of <input type="text">, do hereby declare that the information given above and in the enclosed documents is true
+                                to the best of my knowledge and belief and nothing has been concealed therein. I am well aware of the
+                                fact that if the information given by me is proved false / not true at any point of time, I will have to face
+                                punishment as per any provision of Law for the time being in force as well as the benefit availed of by
+                                me or the benefit accrued to me shall be summarily cancelled.
+                            </p>
+                        </div>
+                    </div>
+                </form>
+                <span>
+                    <button style="margin-left: 0.5rem; margin-bottom: 0.5rem; margin-right: 0.5rem;" class="btn btn-warning btn-lg" id="back-button"><i class="fa fa-arrow-left"></i>&nbsp;Back</button><button style="margin-left: 0.5rem; margin-bottom: 0.5rem; margin-right: 0.5rem;" class="btn btn-info btn-lg" id="next-button">Next&nbsp;<i class="fa fa-arrow-right"></i></button><button  style="margin-left: 0.5rem; margin-bottom: 0.5rem; margin-right: 0.5rem;" class="btn btn-success btn-lg" id="submit-button">Submit</button>
+                </span>
+            </div>
+            <script>
+                $("#approve-btn").click(function () {
+                    $.get("{% url 'approve-user' application.email %}", function (data) {
+                        if (data.code == "200") {
+                            alert("Password : " + data.password);
+                            window.location.href = "{% url 'admin-home' %}";
+                        }
+                        else {
+                            alert("Some Error Occurred");
+                        }
+                    });
+                });
+                $("#ultimate-reject-btn").click(function () {
+                    var xhr = new XMLHttpRequest();
+                    xhr.open("POST", "{% url 'reject-user' %}", true);
+                    xhr.setRequestHeader("Content-Type", "application/json");
+                    xhr.onreadystatechange = function () {
+                        if (xhr.readyState === 4 && xhr.status === 200) {
+                            res = JSON.parse(xhr.responseText);
+                            if (res.code == "200") {
+                                alert("User Rejected");
+                                window.location.href = "/administrator/home/";
+                            }
+                            else {
+                                alert("Check your code dude!");
+                            }
+                        }
+                    };
+                    xhr.send(JSON.stringify({ 'email': "{{application.email}}", "message": $("#reject-info").val() }));
+                });
+            </script>
+            <script>
+                function un_overview_div() {
+                    [...$(".main-div")].forEach(element => {
+                        $(element).css("display", "none")
+                    });
+                    $("#submit-button").css("display", "none");
+                    $(".button-style").css("display", "none");
+                    $("#next-button").css("display", "inline-block");
+                    $("#8").css("display", "none");
+                    [...$("input")].forEach(element => {
+                        element.style.pointerEvents = 'auto';
+                        if (element.type == 'radio' || element.type == 'checkbox' || element.type == 'file') {
+                            par = element.parentNode;
+                            lab = par.getElementsByTagName('label')[0];
+                            lab.style.pointerEvents = 'auto';
+                        }
+                    });
+                    [...$("select")].forEach(element => {
+                        element.style.pointerEvents = 'auto';
+                    });
+                    [...$("textarea")].forEach(element => {
+                        element.style.pointerEvents = 'auto';
+                    });
+                    $("progress").css("display", "block");
+                    sel = document.getElementById('status');
+                    sel.style.pointerEvents = 'auto';
+                    [...sel.getElementsByTagName('option')].forEach(element => {
+                        element.style.pointerEvents = 'auto';
+                    })
+                    document.getElementById('reject-info').style.pointerEvents = 'auto';
+                }
+                
+                function overview_div() {
+                    un_overview_div();
+                    [...$(".main-div")].forEach(element => {
+                        if (element.id == '3' && !document.getElementById("Divorced").checked)
+                        {}
+                        else if (element.id == '4' && !document.getElementById("Widowed").checked){}
+                        else {
+                            $(element).css("display", "block") 
+                        }
+                    });
+                    $("#submit-button").css("display", "inline-block");
+                    $("#next-button").css("display", "none");
+                    [...$("input")].forEach(element => {
+                        element.style.pointerEvents = 'none';
+                        if (element.type == 'radio' || element.type == 'checkbox') {
+                            par = element.parentNode;
+                            lab = par.getElementsByTagName('label')[0];
+                            lab.style.pointerEvents = 'none';
+                        }
+                    });
+                    [...$("select")].forEach(element => {
+                        element.style.pointerEvents = 'none';
+                    });
+                    [...$("textarea")].forEach(element => {
+                        element.style.pointerEvents = 'none';
+                    });
+                    $(".button-style").css("display", "inline-block");
+                    $("progress").css("display", "none");
+                    sel = document.getElementById('status');
+                    sel.style.pointerEvents = 'auto';
+                    [...sel.getElementsByTagName('option')].forEach(element => {
+                        element.style.pointerEvents = 'auto';
+                    })
+                    document.getElementById('reject-info').style.pointerEvents = 'auto';
+                    
+                }            
+            </script>
+            {% include 'main/js/profile_vali_1.js.html' %}
+            {% include 'main/js/profile_vali_2.js.html' %}
+            {% include 'main/js/profile_vali_3.js.html' %}
+            {% include 'main/js/profile_vali_4.js.html' %}
+            {% include 'main/js/profile_vali_5.js.html' %}
+            {% include 'main/js/profile_vali_6.js.html' %}
+            {% include 'main/js/profile_vali_7.js.html' %}
+            {% include 'main/js/profile_vali_8.js.html' %}
+            <script>
+                $(document).ready(function () {
+                    bsCustomFileInput.init()
+                })
+            </script>
+            <script>
+                $('#next-button').click(function(){
+                    if(location.hash[1] == '0'){
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_first_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                            location.href = "#2";
+                        }
+                    }
+                    else if(location.hash[1] == '2'){
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_third_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                            location.href = "#6";
+                        }
+                    }
+                    else if(location.hash[1] == '6'){
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(false)
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                            location.href = "#7";
+                        }
+                    }
+                    else if(location.hash[1] == '7'){
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_eighth_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                            location.href = "#9";
+                        }
+                    }
+                });
+            </script>
+            <!-- <script>
+                $('#next-button').click(function(){
+                    if(location.hash[1] == '0') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_first_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    else if(location.hash[1] == '1') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_second_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    else if(location.hash[1] == '2') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_third_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    else if(location.hash[1] == '3') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_fourth_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    else if(location.hash[1] == '4') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true;
+                        }
+                        if(!validate_widowed_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    else if(location.hash[1] == '5') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true
+                        }
+                        if(!validate_family_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    else if(location.hash[1] == '6') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true
+                        }
+                        if(!validate_preference_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    else if(location.hash[1] == '7') {
+                        if (!is_clicked)
+                        {
+                            is_clicked = true
+                        }
+                        if(!validate_eighth_div())
+                        {
+                            return;
+                        }
+                        else{
+                            is_clicked = false;
+                        }
+                    }
+                    if (parseInt(location.hash[1]) < 9){
+                        if (location.hash[1] == '2'){
+                            if (document.getElementById("Single").checked){
+                                location.href = "#5";
+                            }
+                            else if (document.getElementById("Widowed").checked) {
+                                location.href = "#4";
+                            }
+                            else{
+                                location.href = "#" + (parseInt(location.hash[1]) + 1).toString();
+                            }
+                        }
+                        else if (location.hash[1] == '3'){
+                            location.href = "#5";
+                        }
+                        else{
+                            location.href = "#" + (parseInt(location.hash[1]) + 1).toString();
+                        }
+                    }
+                }); -->
+                <script>
+                    $("#back-button").click(()=>{
+                        if (location.hash[1] == '9'){
+                            location.href = '#7';
+                        }
+                        else if (location.hash[1] == '7'){
+                            location.href = '#6';
+                        }
+                        else if (location.hash[1] == '6'){
+                            location.href = '#2';
+                        }
+                        else if (location.hash[1] == '2'){
+                            location.href = '#0';
+                        }
+                    });
+                </script>
+                <!-- <script>
+                    $('#back-button').click(function(){
+                        if (parseInt(location.hash[1]) >= 1){
+                            if (location.hash[1] == '5'){
+                                if (document.getElementById("Single").checked){
+                                    location.href = "#2";
+                                }
+                                else if(document.getElementById("Divorced").checked){
+                                    location.href = "#3"
+                                }
+                                else{
+                                    location.href = "#" + (parseInt(location.hash[1]) - 1).toString();
+                                }
+                            }
+                            else if (location.hash[1] == '4'){
+                                location.href = "#2";
+                            }
+                            else{
+                                location.href = "#" + (parseInt(location.hash[1]) - 1).toString();
+                            }
+                        }
+                    });
+                </script> -->
+                <script>
+                    old_hash = "-1";
+                    setInterval(function(){
+                        if (old_hash != location.hash[1]){
+                            un_overview_div();
+                            old_hash = location.hash[1];
+                        }
+                        if (location.hash.length==0 || parseInt(location.hash[1]) > 9){
+                            location.href = "#9";
+                        }
+                        if (location.hash[1] == '3'){
+                            if (!document.getElementById("Divorced").checked){
+                                location.href = '#2';
+                            }
+                        }
+                        if (location.hash[1] == '4'){
+                            if (!document.getElementById("Widowed").checked){
+                                location.href = '#2';
+                            }
+                        }
+                        if(location.hash[1] == '9'){
+                            overview_div();
+                        }
+                        else{
+                            for (let i = 0; i<9; i++){
+                                if (i == location.hash[1]){
+                                    document.getElementById(i).style.display="block";
+                                    if (i == 0){
+                                        document.getElementById("back-button").style.display="none";
+                                    }
+                                    else{
+                                        document.getElementById("back-button").style.display="inline-block";
+                                    }
+                                }
+                                else{
+                                    document.getElementById(i).style.display="none";
+                                }
+                            }
+                        }
+                    },0);
+                </script>
+                <script>
+                    function edit(id){
+                        location.href = "#" + id;
+                    }
+                </script>
+                <script>
+                    function formToString(filledForm) {
+                        formObject = new Object;
+                        filledForm.find("input, select, textarea").each(function() {
+                            if (this.id) {
+                                elem = $(this);
+                                if (elem.attr("type") == 'checkbox' || elem.attr("type") == 'radio') {
+                                    formObject[this.id] = elem.attr("checked");
+                                } else {
+                                    formObject[this.id] = elem.val();
+                                }
+                            }
+                        });
+                        formString = JSON.stringify(formObject);
+                        return formString;
+                    }
+                    
+                    function formToStringWithName(filledForm) {
+                        formObject = new Object;
+                        filledForm.find("input, select, textarea").each(function() {
+                            if (this.name) {
+                                elem = $(this);
+                                if (elem.attr("type") == 'checkbox' || elem.attr("type") == 'radio') {
+                                    formObject[this.name] = elem.attr("checked");
+                                } else {
+                                    formObject[this.name] = elem.val();
+                                }
+                            }
+                        });
+                        formString = JSON.stringify(formObject);
+                        return formString;
+                    }
+                    
+                    function stringToForm(formString, unfilledForm) {
+                        formObject = JSON.parse(formString);
+                        unfilledForm.find("input, select, textarea").each(function() {
+                            if (this.id) {
+                                id = this.id;
+                                elem = $(this); 
+                                if (elem.attr("type") == "checkbox" || elem.attr("type") == "radio" ) {
+                                    elem.attr("checked", formObject[id]);
+                                } else {
+                                    elem.val(formObject[id]);
+                                }
+                            }
+                        });
+                    }
+                    // Tests
+                    var formString = formToString($('#matrimony-form'));
+                    var formStringWithName = formToStringWithName($('#matrimony-form'));
+                    
+                    // stringToForm(formString, $('#matrimony-form'));
+                </script>
+                <script>
+                    $("#submit-button").click(function(){
+                        token_div = document.createElement("div");
+                        token_div.innerHTML = '{% csrf_token %}';
+                        document.getElementById("matrimony-form").appendChild(token_div);
+                        un_overview_div();
+                        document.getElementById("matrimony-form").submit();
+                    });
+                </script>
+                <script>
+                    $('#status-update').click(() => {
+                        $.get(`/api/switch-status/{{app.email}}/${$('#status').val()}/`, (data) => {
+                            if (data.code == 200) {
+                                window.location.reload();
+                            }
+                        })
+                    })
+                </script>
+                {% endwith %}
+                {% endblock %}
+                

@@ -1,0 +1,1001 @@
+{% extends 'main/base.html' %}
+{% load cloudinary %}
+{% load static %}
+{% load custom_templates %}
+{% block title %}
+My Dashboard
+{% endblock %}
+{% block header %}
+<style>
+    #passport-photo{
+        border: solid rgb(231, 221, 221) 2px;
+        box-shadow: black 2px 2px 3px;
+    }
+    body{ 
+        color: #1a202c;
+        text-align: left;
+        background-color:  #152a38 /*rgb(255, 167, 176)*/;   
+        overflow-x: hidden;
+    }
+    .main-body {
+        padding: 15px;
+    }
+    .card {
+        box-shadow: 0 1px 3px 0 rgba(0,0,0,.1), 0 1px 2px 0 rgba(0,0,0,.06);
+    }
+    
+    .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 0 solid rgba(0,0,0,.125);
+        border-radius: .25rem;
+    }
+    
+    .card-body {
+        flex: 1 1 auto;
+        min-height: 1px;
+        padding: 1rem;
+    }
+    
+    .gutters-sm {
+        margin-right: -8px;
+        margin-left: -8px;
+    }
+    
+    .gutters-sm>.col, .gutters-sm>[class*=col-] {
+        padding-right: 8px;
+        padding-left: 8px;
+    }
+    .mb-3, .my-3 {
+        margin-bottom: 1rem!important;
+    }
+    
+    .bg-gray-300 {
+        background-color: #e2e8f0;
+    }
+    .h-100 {
+        height: 100%!important;
+    }
+    .shadow-none {
+        box-shadow: none!important;
+    }
+    .heart-button{
+        border-radius: 10px;
+        box-shadow: rgba(0, 0, 0, 0.87) 2px 2px 3px;
+        transition: 0.4s ease-out;
+    }
+    .heart-button:hover{
+        border-radius: 100%;
+        box-shadow: rgba(0, 0, 0, 0.87) 3px 3px 4px;
+        transition: 0.4s ease-in;
+        animation: hover-anim 1s infinite ease;
+    }
+    .clicked-heart-button{
+        border-radius: 10px;
+        background-color: #1a202c00;
+        color: #C82333;
+        animation: hover-anim 1s infinite ease;
+    }
+    .clicked-done-heart-button{
+        border-radius: 10px;
+        background-color: #1a202c00;
+        color: #C82333;
+        animation: hover-anim 1s infinite ease;
+    }
+    .clicked-done-heart-button:hover{
+        border-radius: 10px;
+        background-color: #1a202c00;
+        color: #C82333;
+        animation: hover-anim 1s infinite ease;
+    }
+    .done-heart-button{
+        border-radius: 10px;
+        background-color: #1a202c00;
+        color: #C82333;
+        transition: 0.4s ease-out;
+    }
+    .done-heart-button:hover{
+        border-radius: 100%;
+        transition: 0.4s ease-in;
+        background-color: #1a202c00;
+        color: #C82333;
+        animation: hover-anim 1s infinite ease;
+    }
+    .done-heart-button:focus{
+        border-radius: 100%;
+        transition: 0.4s ease-in;
+        background-color: #1a202c00;
+        color: #C82333;
+    }
+    progress{
+        height: 3rem;
+    }
+    @keyframes hover-anim{
+        0%{
+            transform: rotateY(0deg);
+        }
+        20%{
+            transform: rotateY(60deg);
+        }
+        40%{
+            transform: rotateY(-60deg);
+        }
+        100%{
+            transform: rotateY(0deg);
+        }
+    }
+    @media screen and (max-width: 600px) {
+        .col-sm-1{
+            width: fit-content;
+        }
+        .col-sm-3{
+            width: 50%;
+        }
+        .col-sm-8{
+            width: fit-content;
+        }
+    }
+    
+    /*
+    
+    Need to fix the mobile view of phone number, "baal du line e asche"
+    
+    */
+    
+    @media screen and (max-width: 1024px) {
+        .mobile{
+            display: none;
+        }
+        .col-main {
+            width: 100%;
+        }  
+        .mobile-1{
+            display: none;
+        }
+        .col-main-1 {
+            width: 100%;
+            max-width: 100%;
+            flex: 0 0 100%;
+        }
+    }
+    
+    @media screen and (max-width: 1024px) {
+        .col-main-1 {
+            width: 100%;
+        }  
+    }
+    .carousel-control-prev-icon,
+    .carousel-control-next-icon {
+        height: 100px;
+        width: 100px;
+        outline: black;
+        background-size: 100%, 100%;
+        border-radius: 50%;
+        border: 1px solid rgba(0, 0, 0, 0);
+        background-image: none;
+    }
+    
+    .carousel-control-next-icon:after
+    {
+        content: 'ᐅ';
+        font-size: 55px;
+        color: red;
+    }
+    
+    .carousel-control-prev-icon:after {
+        content: 'ᐊ';
+        font-size: 55px;
+        color: red;
+    }
+    
+    .mac-div {
+        text-align: center;
+    }
+    
+    .mac-image {
+        display: inline-block;
+        max-height: 30rem;
+        width: auto;
+    }
+    .profile-pic {
+        width: 150px;
+        height: 150px;
+        background: url("{% profile user_app %}");
+        background-size: cover;
+        background-position: center;
+        border-radius: 100%;
+        border: solid rgb(226, 226, 226) 3px;
+        box-shadow: rgba(0, 0, 0, 0.658) 1px 1px 2px;
+    }
+    
+    .watermark {
+        background: url("/media/watermark.svg");
+        background-repeat: round;
+        position: absolute;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+    
+    .family-photo {
+        background: url("{% carousel user_app.family_photo_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .your_photo_1 {
+        background: url("{% carousel user_app.your_photo_1_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .your_photo_2 {
+        background: url("{% carousel user_app.your_photo_2_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .your_photo_3 {
+        background: url("{% carousel user_app.your_photo_3_1 %}");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 100%;
+        height: 30rem;
+        overflow: hidden;
+        position: relative;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="main-body">
+        
+        <!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/">Home</a></li>
+                <li class="breadcrumb-item"><a 
+                    href="{%  if request.user.is_staff or request.user.is_superuser %}
+                    {% url 'admin-home' %}
+                    {% else %}
+                    {% url 'user-dashboard' %}
+                    {% endif %}">Dashboard</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">User Profile</li>
+                </ol>
+            </nav>
+            <!-- /Breadcrumb -->
+            
+            <div class="row gutters-sm">
+                <div class="col-md-4 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-column align-items-center text-center">
+                                <div class='profile-pic'>
+                                </div>
+                                <div class="mt-3">
+                                    <h4 style="display: inline-block;">{{user_app.first_name}} {% if matched %}{{user_app.last_name}}{% else %}{{user_app.last_name|make_list|slice:":1"|join:""}}{% endif %}.&nbsp;</h4><br><h6 style="display: inline-block;">Age: {{user_app.date_of_birth|timesince|split:", "}}</h6>
+                                    <p class="text-secondary mb-1">
+                                        {% if user_app.about_yourself|length %}
+                                        {{user_app.about_yourself}}
+                                        <br>
+                                        {% endif %}
+                                    </p>
+                                    <p class="text-muted font-size-sm"><b>{{user_app.city}}, {{user_app.state}}</b></p>
+                                    {% if not request.user.is_staff %}
+                                    {% if user_app != request.user.matrimonyapplication %}
+                                    <div style="padding-left: 10px; padding-right: 10px;">
+                                        <div class="row">
+                                            {% if has_liked %}
+                                            <button class="btn btn-success col-lg" style="display: block; margin: 5px" id="heart-button"><i class="fas fa-heart"></i>&nbsp;Interested</button>
+                                            {% else %}
+                                            <button class="btn btn-outline-success col-lg" style="display: block; margin: 5px" id="heart-button"><i class="fas fa-heart"></i>&nbsp;Interested</button>
+                                            {% endif %}
+                                        </div>
+                                        <div class="row">
+                                            {% if has_unliked %}
+                                            <button class="btn btn-danger col-lg" style="display: block; margin: 5px" id="not-interested"><i class="fas fa-ban"></i>&nbsp;Not Interested</button>
+                                            {% else %}
+                                            <button class="btn btn-outline-danger col-lg" style="display: block; margin: 5px" id="not-interested"><i class="fas fa-ban"></i>&nbsp;Not Interested</button>
+                                            {% endif %}
+                                        </div>
+                                        <div class="row">
+                                            {% if has_blocked %}
+                                            <button class="btn btn-info col-lg" style="display: block; margin: 5px" id="block"><i class="fas fa-lock-open"></i>&nbsp;Unblock</button>
+                                            {% else %}
+                                            <button class="btn btn-outline-info col-lg" style="display: block; margin: 5px" id="block"><i class="fas fa-user-lock"></i>&nbsp;Block</button>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-8">
+                    <div class="card mb-3">
+                        <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="card-body">
+                                        <h3 style="font-style: italic;">Primary Details-</h3>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-glass-cheers"></i>&emsp;Drink</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.drink}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-smoking"></i>&emsp;Smoke</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.smoke}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-church"></i>&emsp;Rite</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.rite}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-language"></i>&emsp;Mother Tongue</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.mother_tongue|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.mother_tongue}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-wheelchair"></i>&emsp;Disability</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.disability}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-users"></i>&emsp;Family Background</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.family_values|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.family_values}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-male"></i><i class="fas fa-female"></i>&emsp;Marital Status</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.marital_status|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.marital_status}}
+                                                {% endif %}
+                                            </div>
+                                        </div>                  
+                                    </div> 
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="card-body">
+                                        <h3 style="font-style: italic;">Educational Details-</h3>
+                                        <br>
+                                        <!-- <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-graduation-cap"></i>&emsp;Education</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.education_level == 'Other' %}{{user_app.degree_type}} {% else %} {{user_app.education_level}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr> -->
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-book"></i>&emsp;Tenth School</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.tenth_school|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.tenth_school}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-university"></i>&emsp;Higher Secondary School</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.hs_school|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.hs_school}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-graduation-cap"></i>&emsp;Graduation</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.grad_school|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.grad_school}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-graduation-cap"></i>&emsp;Post Graduation</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.post_grad_school|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.post_grad_school}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-graduation-cap"></i>&emsp;Degree Type</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.other_type|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.other_type}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-briefcase"></i>&emsp;Occupation</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.occupation|length == 0 %}
+                                                N/A
+                                                {% else %}
+                                                {{user_app.occupation}}
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="card-body">
+                                        <h3 style="font-style: italic;">Family Details-</h3>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-male"></i>&emsp;Father</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.fathers_name}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-female"></i>&emsp;Mother</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.mothers_name}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-users"></i>&emsp;No. of Siblings</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.siblings}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-male"></i>&emsp;Brothers</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.brothers}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-female"></i>&emsp;Sisters</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.sisters}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-female"></i>&emsp;About Family</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {% if user_app.about_family %}
+                                                {{user_app.about_family}}
+                                                {% else %}
+                                                N/A
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% if user_app.marital_status == 'Widowed' %}
+                                <div class="carousel-item">
+                                    <div class="card-body">
+                                        <h3 style="font-style: italic;">More Details-</h3>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-male"></i>&emsp;Former Spouse Name</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.former_spouse_name_2}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-female"></i>&emsp;Date Of Death</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.date_of_death}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-users"></i>&emsp;No. of Children</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.no_of_children_2}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-male"></i>&emsp;Sons</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.no_of_sons_2}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-female"></i>&emsp;Daughters</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.no_of_daughters_2}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                                {% if user_app.marital_status == 'Divorced' %}
+                                <div class="carousel-item">
+                                    <div class="card-body">
+                                        <h3 style="font-style: italic;">More Details-</h3>
+                                        <br>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-male"></i>&emsp;Former Spouse Name</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.former_spouse_name_1}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-female"></i>&emsp;Date Of Divorce</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.divorce_date}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-users"></i>&emsp;Date Of Annulment</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.marriage_annulment_date}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-users"></i>&emsp;No. of Children</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.no_of_children_1}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-male"></i>&emsp;Sons</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.no_of_sons_1}}
+                                            </div>
+                                        </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-sm-3 col-main-1">
+                                                <h6 class="mb-0"><i class="fas fa-female"></i>&emsp;Daughters</h6>
+                                            </div>
+                                            <div class="col-sm-1 mobile-1">
+                                                <h6 class="mb-0">:</h6>
+                                            </div>
+                                            <div class="col-sm-8 text-secondary">
+                                                {{user_app.no_of_daughters_1}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>           
+                    </div>
+                    <div class="row gutters-sm">
+                        <div class="col-sm-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="d-flex align-items-center mb-3"><i class="fas fa-ruler"></i>&emsp;Height</h6>
+                                    <small>{{user_app.height}} cm</small><br>
+                                    <progress max="300" min="100" value="{{user_app.height}}" class="col-sm"></progress>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mb-3">
+                            <div class="card">
+                                <div class="card-body">
+                                    <h6 class="d-flex align-items-center mb-3"><i class="fas fa-weight"></i>&emsp;Weight</h6>
+                                    <small>{{user_app.weight}} Kg</small><br>
+                                    <progress max="150" min="30" value="{{user_app.weight}}" class="col-sm"></progress>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>        
+            </div>
+            {% if matched or request.user.is_staff %}
+            <div class="row gutters-sm" style="margin-bottom: 2rem;">
+                <div class="col-md-12 mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="row" style="padding-bottom: 0.75rem;">
+                                <div class="col-lg">
+                                    <h3 class="mb-0" style="margin-bottom: 0.75rem;">Contact Details</h3>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-3 col-main">
+                                    <h6 class="mb-0"><i class="fas fa-envelope"></i>&emsp;Email</h6>
+                                </div>
+                                <div class="col-lg-1 mobile"><h6 class="mb-0">:</h6></div>
+                                <div class="col-lg-8 text-secondary">
+                                    {{user_app.email}}
+                                </div>
+                            </div>
+                            <hr>
+                            <div class="row">
+                                <div class="col-lg-3 col-main">
+                                    <h6 class="mb-0"><i class="fas fa-phone"></i>&emsp;Phone Number</h6>
+                                </div>
+                                <div class="col-lg-1 mobile"><h6 class="mb-0">:</h6></div>
+                                <div class="col-lg-8 text-secondary">
+                                    {{user_app.phone_number}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+            <div class="row gutters-sm">
+                <div class="col-md-12 mb-3">
+                    <div class="card mb-3">
+                        <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators">
+                                <li data-target="#carouselExampleCaptions" data-slide-to="0" class="active"></li>
+                                <li data-target="#carouselExampleCaptions" data-slide-to="1"></li>
+                                <li data-target="#carouselExampleCaptions" data-slide-to="2"></li>
+                                <li data-target="#carouselExampleCaptions" data-slide-to="3"></li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <div class="mac-div">
+                                        <a href="{% url 'image-preview' user_app.id 0 %}" target="__blank">
+                                            <div class='family-photo'>
+                                                <div class="watermark"></div>
+                                            </div>
+                                        </a>                  
+                                    </div>
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Family Photo</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="mac-div">
+                                        <a href="{% url 'image-preview' user_app.id 1 %}" target="__blank">
+                                            <div class="your_photo_1">
+                                                <div class="watermark"></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Photo #1</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="mac-div">
+                                        <a href="{% url 'image-preview' user_app.id 2 %}" target="__blank">
+                                            <div class="your_photo_2">
+                                                <div class="watermark"></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Photo #2</h5>
+                                    </div>
+                                </div>
+                                <div class="carousel-item">
+                                    <div class="mac-div">
+                                        <a href="{% url 'image-preview' user_app.id 3 %}" target="__blank">
+                                            <div class="your_photo_3">
+                                                <div class="watermark"></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                    <div class="carousel-caption d-none d-md-block">
+                                        <h5>Photo #3</h5>
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="carousel-control-prev" href="#carouselExampleCaptions" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleCaptions" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $("#heart-button").click(() => {
+            if ($("#heart-button").hasClass("btn-outline-success")){
+                if (confirm("Are you sure?")){
+                    $.get("{% url 'like-app' user_app.id %}", (data) => {
+                        if (data["code"] == "200"){
+                            console.log("Liked")
+                            window.location.reload();
+                        }
+                        else{
+                            alert("Some Error Occurred. Response code 400");
+                        }
+                    });
+                }
+            }
+            else{
+                if (confirm("Are you sure?")){
+                    $.get("{% url 'dislike-app' user_app.id %}", (data) => {
+                        if (data["code"] == "200"){
+                            console.log("Liked")
+                            window.location.reload();
+                        }
+                        else{
+                            alert("Some Error Occurred. Response code 400");
+                        }
+                    });
+                }
+            }
+        });
+        $('#not-interested').click(() => {
+            if ($('#not-interested').hasClass("btn-outline-danger")) {
+                if (confirm("Are you sure?")){
+                    $.get("{% url 'unlike-app' user_app.id %}", (data) => {
+                        if (data["code"] == "200"){
+                            window.location.reload();
+                        } else {
+                            alert("Some Error Occurred. Response code 400");
+                        }
+                    });
+                }
+            } else {
+                if (confirm("Are you sure?")){
+                    $.get("{% url 'disunlike-app' user_app.id %}", (data) => {
+                        if (data["code"] == "200"){
+                            window.location.reload();
+                        } else {
+                            alert("Some Error Occurred. Response code 400");
+                        }
+                    });
+                }
+            }
+        });
+        $('#block').click(() => {
+            if ($('#block').hasClass("btn-outline-danger")) {
+                if (confirm("Are you sure?")){
+                    $.get("{% url 'block-app' user_app.id %}", (data) => {
+                        if (data["code"] == "200"){
+                            window.location.reload();
+                        } else {
+                            alert("Some Error Occurred. Response code 400");
+                        }
+                    });
+                }
+            } else {
+                if (confirm("Are you sure?")){
+                    $.get("{% url 'disblock-app' user_app.id %}", (data) => {
+                        if (data["code"] == "200"){
+                            window.location.reload();
+                        } else {
+                            alert("Some Error Occurred. Response code 400");
+                        }
+                    });
+                }
+            }
+        });
+    </script>
+    {% endblock %}

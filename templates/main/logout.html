@@ -1,0 +1,34 @@
+{% extends 'main/base.html' %}
+{% block title %}
+    Logout | marryacatholic.com
+{% endblock %}
+{% block header %}
+    <style>
+        body {
+            background-color: #263238;
+        }
+        .form-control {
+            background: transparent;
+            color: whitesmoke;
+        }
+
+        .form-control:focus {
+            background: transparent;
+            color: whitesmoke;
+        }
+
+        .dark-mode {
+            background: transparent;
+            color: whitesmoke;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <p class="dark-mode">You were logged out. <a href="{% url 'login' %}">Log in again?</a></p>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+
+<h3 style="color: white; text-shadow: solid black 1px 1px 2px;">Payment received.</h3>
+<h4 style="color: white; text-shadow: solid black 1px 1px 2px;">Your payment was successful.</h4>
+<p style="color: rgba(255, 255, 255, 0.726);">
+    Thank you for registering with marryacatholic.com. Your application submission has been successful and is submitted for review and approval by the site administrator. The application usually takes 24/48 hours for approval, after which your username and password will be emailed to you. 
+    <br>
+    <br>
+    If you have any additional queries, please do not hesitate to reach out to our team.
+    <br>
+    <br>
+    Thanks & Regards,
+    <br>
+    FWC team.
+    <br>
+    <br>
+    <b><em style="color: rgba(255, 255, 255, 0.726);">This is an auto-generated email, please refrain from replying to the same.</em></b>
+</p>
+{% endblock %}

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Complete Submission | Marryacatholic.com</title>
+        <link
+            rel="stylesheet"
+            href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
+            integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2"
+            crossorigin="anonymous"
+        />
+        <script
+            src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+            integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+            crossorigin="anonymous"
+        ></script>
+        <script
+            src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js"
+            integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx"
+            crossorigin="anonymous"
+        ></script>
+        <link
+            rel="stylesheet"
+            href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+            integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+            crossorigin="anonymous"
+        />
+        <!-- Hotjar Tracking Code for marryacatholic.com -->
+        <script>
+            (function (h, o, t, j, a, r) {
+                h.hj =
+                    h.hj ||
+                    function () {
+                        (h.hj.q = h.hj.q || []).push(arguments);
+                    };
+                h._hjSettings = { hjid: 2541006, hjsv: 6 };
+                a = o.getElementsByTagName("head")[0];
+                r = o.createElement("script");
+                r.async = 1;
+                r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
+                a.appendChild(r);
+            })(
+                window,
+                document,
+                "https://static.hotjar.com/c/hotjar-",
+                ".js?sv="
+            );
+        </script>
+        <style>
+            .attachment > * {
+                display: block;
+                margin-top: 4rem;
+                margin-bottom: 4rem;
+            }
+            .error-msg {
+                color: red;
+            }
+        </style>
+    </head>
+    <body>
+        {% if request.method == 'GET' %}
+        <form action="" method="post" enctype="multipart/form-data">
+            <div id="7" class="main-div attachment hide container">
+                <input
+                    type="hidden"
+                    name="Attachments"
+                    value="____ATTACHMENTS____"
+                />
+                <label for="7"
+                    ><h4 style="margin-top: 1rem" class="anim-heading">
+                        ATTACHMENTS
+                    </h4></label
+                >
+                <!-- <a class="btn btn-link button-style" onclick = "edit(this.parentNode.id)">Edit</a> -->
+                <script src="https://cdn.jsdelivr.net/npm/bs-custom-file-input/dist/bs-custom-file-input.min.js"></script>
+                <p>
+                    Please upload the appropriate documents for the admin to
+                    verify.
+                </p>
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="Parish Priest Reference Letter"
+                        class="custom-file-input doc"
+                        id="Parish Priest Reference Letter"
+                        required
+                    />
+                    <label
+                        class="custom-file-label"
+                        for="Parish Priest Reference Letter"
+                        >Parish Priest Reference Letter</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="Baptism Letter"
+                        class="custom-file-input doc"
+                        id="Baptism Letter"
+                        required
+                    />
+                    <label class="custom-file-label" for="Baptism Letter"
+                        >Baptism Certificate</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                {% if is_divorced %}
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="Civil Divorce Document"
+                        class="custom-file-input doc"
+                        id="Civil Divorce Document"
+                    />
+                    <label
+                        class="custom-file-label"
+                        for="Civil Divorce Document"
+                        >Civil Divorce Document</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="Marriage Annulment Document"
+                        class="custom-file-input doc"
+                        id="Marriage Annulment Document"
+                    />
+                    <label
+                        class="custom-file-label"
+                        for="Marriage Annulment Document"
+                        >Marriage Annulment Document</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                {% endif %} {% if is_widowed %}
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="Former Spouse Death Certificate"
+                        class="custom-file-input doc"
+                        id="Former Spouse Death Certificate"
+                    />
+                    <label
+                        class="custom-file-label"
+                        for="Former Spouse Death Certificate"
+                        >Former Spouse Death Certificate</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                {% endif %} {% if is_disabled %}
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="Disability Certificate"
+                        class="custom-file-input doc"
+                        id="Disability Certificate"
+                    />
+                    <label
+                        class="custom-file-label"
+                        for="Disability Certificate"
+                        >Disability Certificate</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                {% endif %}
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="passport_photo"
+                        class="custom-file-input"
+                        accept=".png,.jpg,.bmp,.jpeg"
+                        id="id_passport_photo"
+                        required
+                    />
+                    <label class="custom-file-label" for="id_passport_photo"
+                        >Passport Size Photo</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="family_photo"
+                        class="custom-file-input"
+                        id="id_family_photo"
+                        required
+                        accept=".png,.jpg,.bmp,.jpeg"
+                    />
+                    <label class="custom-file-label" for="id_family_photo"
+                        >Family Photo</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="your_photo_1"
+                        class="custom-file-input"
+                        id="id_your_photo_1"
+                        required
+                        accept=".png,.jpg,.bmp,.jpeg"
+                    />
+                    <label class="custom-file-label" for="id_your_photo_1"
+                        >Your Photo #1</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="your_photo_2"
+                        class="custom-file-input"
+                        id="id_your_photo_2"
+                        accept=".png,.jpg,.bmp,.jpeg"
+                    />
+                    <label class="custom-file-label" for="id_your_photo_2"
+                        >Your Photo #2</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+                <div class="custom-file">
+                    <input
+                        type="file"
+                        name="your_photo_3"
+                        class="custom-file-input"
+                        id="id_your_photo_3"
+                        accept=".png,.jpg,.bmp,.jpeg"
+                    />
+                    <label class="custom-file-label" for="id_your_photo_3"
+                        >Your Photo #3</label
+                    >
+                    <ul class="error-msg"></ul>
+                </div>
+            </div>
+            <input type="submit" id="id-submit" style="display: none" />
+        </form>
+        <div class="container">
+            <button class="btn btn-outline-primary" id="our-submit">
+                Submit
+            </button>
+        </div>
+        <script>
+            $(document).ready(function () {
+                bsCustomFileInput.init();
+            });
+        </script>
+        <script>
+            function checker() {
+                let new_atchs = [
+                    ...document.getElementsByClassName("custom-file-input"),
+                ];
+                size_li = document.createElement("li");
+                size_li.innerHTML =
+                    "<small>File size exceeded size limit.</small>";
+                ext_li = document.createElement("li");
+                ext_li.innerHTML = "<small>Invalid File Format.</small>";
+                na_li = document.createElement("li");
+                na_li.innerHTML = "<small>This is required.</small>";
+                new_atchs.forEach((atch, index) => {
+                    atch.parentElement.children[2].innerHTML = "";
+                });
+                not_error = true;
+                new_atchs.forEach((atch, index) => {
+                    console.log(atch.files);
+                    if (atch.files.length > 0) {
+                        if (
+                            !["jpg", "png", "bmp", "jpeg"].includes(
+                                atch.files[0].name.split(".").pop()
+                            ) &&
+                            !atch.classList.contains("doc")
+                        ) {
+                            var ext_li_new = ext_li.cloneNode(true);
+                            atch.parentElement.children[2].appendChild(
+                                ext_li_new
+                            );
+                            not_error = false;
+                            // atch.siblings[1].innerHTML = "<li>Invalid format.</li>"
+                        }
+                        if (parseInt(atch.files[0].size) > 2097155) {
+                            console.log(parseInt(atch.files[0].size) > 2097155);
+                            var size_li_new = size_li.cloneNode(true);
+                            atch.parentElement.children[2].appendChild(
+                                size_li_new
+                            );
+                            not_error = false;
+                        }
+                    } else {
+                        console.log("dui baar");
+                        var na_li_new = na_li.cloneNode(true);
+                        atch.parentElement.children[2].appendChild(na_li_new);
+                        not_error = false;
+                    }
+                });
+                return not_error;
+            }
+
+            let new_atchs = [
+                ...document.getElementsByClassName("custom-file-input"),
+            ];
+            new_atchs.forEach((atch, index) => {
+                atch.addEventListener("change", () => {
+                    checker();
+                });
+            });
+
+            let sub = document.getElementById("our-submit");
+            sub.addEventListener("click", (e) => {
+                console.log("in");
+                if (checker()) {
+                    $("#id-submit").click();
+                }
+            });
+        </script>
+        {% else %} You've successfully submitted your application and
+        certificates. An admin will review your data, and will reach out to you
+        shortly via mail.
+        <script>
+            setInterval(() => {
+                window.location.href = "/";
+            }, 3000);
+        </script>
+        {% endif %}
+    </body>
+</html>

@@ -1,0 +1,40 @@
+{% extends 'main/base.html' %}
+{% block title %}
+Select Plan
+{% endblock %}
+{% block header %}
+<style>
+    #wrapper {
+        min-height: 100vh;
+        padding-top: 20vh;
+    }
+    #submit {
+        position: absolute;
+        right: 0;
+    }
+</style>
+{% endblock %}
+{% block content %}
+<div class="container" id="wrapper">
+    <h2>Select a plan and click on continue to proceed: </h2>
+    <small>Save this <a href="{% url 'select-plan' app_id %}">https://{{request.META.HTTP_HOST}}{% url 'select-plan' app_id %}</a> if you want to pay later.</small>
+    <form action="" method="post" enctype="multipart/form-data">
+        <div style="position: relative;">
+            <div class="form-group">
+                <label for="id_plans">CHOOSE PLAN</label>
+                <select name="plans" id="id_plans" class="form-control" required>
+                    {% for plan in plans %}
+                        <option value="{{plan.id}}">{{plan.plan_name}}</option>
+                    {% empty %}
+                    {% endfor %}
+                </select>
+                <small>&bull; 18% GST will be added to this amount. The total will be available in the receipt before the payment.</small>
+            </div>
+            <button type="submit" id="submit" class="btn btn-outline-success">Continue&nbsp;<i class="fas fa-arrow-right"></i></button>
+        </div>        
+    </form> 
+    <div style="text-align: center;">
+        <img src="/media/razorpay_pvguic.png" alt=":(" style="display: inline-block; padding-top: 6rem; width: 40rem; max-width: 90%;">
+    </div>
+</div>
+{% endblock %}

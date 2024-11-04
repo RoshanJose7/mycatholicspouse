@@ -1,0 +1,13 @@
+{% extends 'main/email_base.html' %}
+{% block email_body %}
+    <h3 style="color: white;">The batch approval was successful. </h3>
+    <br>
+    <p style="color: white;">Here's a list of login credentials for the users that were approved, for reference purposes.</p>
+    <ul style="color: white; list-style: none;">
+        {% for k, v in passwords_dict.items %}
+            <li><a href="mailto:{{k}}" style="color: white;">{{k}}</a>: <b>{{v}}</b></li>
+        {% endfor %}
+    </ul>
+    <br>
+    <p style="color: white;">This was a generated message. Please do not reply to this.</p>
+{% endblock %}

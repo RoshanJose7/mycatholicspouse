@@ -1,0 +1,80 @@
+{% extends 'main/base.html' %}
+{% block title %}
+    Login | marryacatholic.com
+{% endblock %}
+{% block header %}
+    <style>
+        body {
+            background-color: #263238;
+        }
+        .form-control {
+            background: transparent;
+            color: whitesmoke;
+        }
+
+        .form-control:focus {
+            background: transparent;
+            color: whitesmoke;
+        }
+
+        .dark-mode {
+            background: transparent;
+            color: whitesmoke;
+        }
+
+        .errors {
+            color: red;
+        }
+    </style>
+{% endblock %}
+{% block content %}
+<div class="container">
+    <form action="" method="POST">
+        {% csrf_token %}
+        <div class="form-group">
+            <div class="errors">
+                {{form.non_field_errors}}
+            </div>
+            <label for="id_username" class="dark-mode">Username</label>
+            <input type="text" class="form-control" name="username" autofocus autocapitalize="none" autocomplete="username" maxlength="150" required id="id_username" placeholder="Username">
+            <div class="errors">
+                {{form.username.errors}}
+            </div>
+            <label for="id_password" class="dark-mode">Password</label>
+            <input type="password" class="form-control" name="password" autocomplete="current-password" required id="id_password" placeholder="Password">
+            <div class="errors">
+                {{form.password.errors}}
+            </div>
+        </div>
+        <input type="submit" id='submit' style="display: none;">
+    </form>
+    <a id="our-submit" class="btn btn-primary">Log In</a>
+    <a href="{% url 'password-reset' %}"><small>Forgot Password?</small></a>
+</div>
+<script>
+    $('#our-submit').click(() => {
+        $.get(`/api/check-status/${$('#id_username').val()}`, (data) => {
+            console.log(data);
+            if (data.code == 200) {
+                if (data.response) {
+                    $('#submit').click();
+                } else {
+                    alert('Error 404: User Not Found');
+                }
+            } else {
+                alert('Error 404: User Not Found');
+            }
+        });
+    });
+</script>
+    {% if request.user.is_authenticated %}
+      <script>
+          if (window.location.search.length>0){
+            window.location.href = window.location.search.split("=")[1];
+          }
+          else{
+            window.location.href = "/";
+          }
+      </script>
+    {% endif %}
+{% endblock %}
