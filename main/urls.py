@@ -42,7 +42,7 @@ urlpatterns = [
     path('password-reset/', views.password_reset, name="password-reset"),
     path('password-reset-next/<token>/', views.password_reset_next, name='password-reset-next'),
     path('image-preview/<index>/<img_no>/', views.image_preview, name="image-preview"),
-    path('meet-and-greet/', views.meet_and_greet_creation_page, name="meet-and-greet"),
+    # path('meet-and-greet/', views.meet_and_greet_creation_page, name="meet-and-greet"),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 
